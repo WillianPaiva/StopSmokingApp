@@ -1,6 +1,7 @@
 var appCtrl = angular.module('starter.controllers', ['highcharts-ng']);
 
-appCtrl.controller('DashCtrl', function($scope, ChartCreate, pouchService, DataBase) {
+appCtrl.controller('DashCtrl', function($scope, ChartCreate, pouchService, DataBase, $ionicPlatform) {
+    $ionicPlatform.ready(function(){
     $scope.chartConfig = ChartCreate;
     //pouchService.db.destroy();
 
@@ -31,10 +32,12 @@ appCtrl.controller('DashCtrl', function($scope, ChartCreate, pouchService, DataB
     }
 
     DataBase.setChart('Learn', setBaseLine);
-    DataBase.setChart('NotLearn', setMedian);
+    DataBase.setChartLastWeek('NotLearn', new Date(), setMedian);
     
 
-    DataBase.chartIndex();
+    DataBase.byStatus();
+    DataBase.lastWeek();
+    });
 });
 
 

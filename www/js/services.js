@@ -123,9 +123,60 @@ appServ.factory('DataBase', function(pouchService, $q){
                 console.log(err);
             });
         },
-        chartIndex: function(){
+        setChartLastWeek: function(key, date, callback){
+            var temp = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+            var temp2 = [];
+            var day1, day2, week1, week2, year1, year2;
+            day1 = date.getDate();
+            week1 = date.getWeek();
+            year1 = date.getFullYear();
+            date.addDays(-7);
+            day2 = date.getDate();
+            week2 = date.getWeek();
+            year2 = date.getFullYear()
+            $q.when(pouchService.db.find({
+                selector: {
+                    $and: [
+                            {year: {$lte: year1}},
+                            {year: {$gte: year2}},
+                            {day: {$lte: day1}},
+                            {day: {$gte: day2}},
+                            {week: {$lte: week1}},
+                            {week: {$gte: week2}},
+                            {status: {$eq: key}}
+                    ]
+                },
+            })).then(function(res){
+                return $q.all(res.docs.map(function(doc){
+                   temp2.push(doc.day);
+                   return temp[doc.hour]++;
+                }));
+                }).then(function(data){
+                temp2 = temp2.unique();
+                for(var i = 0; i < 24; i++){
+                    if(temp2.length > 0){
+                        temp[i] = (temp[i]/temp2.length);
+                    }
+                }
+                return temp;
+            }).then(function(data){
+                return callback(data);
+            }).catch(function(err){
+                console.log(err);
+            });
+        },
+        byStatus: function(){
             pouchService.db.createIndex({
-                index: {fields: ['status', 'day']}
+                index: {fields: ['status']}
+            }).then(function(result){
+                console.log(result);
+            }).catch(function(err){
+                console.log(err);
+            });
+        },
+        lastWeek: function(){
+            pouchService.db.createIndex({
+                index: {fields: ['year', 'week', 'day', 'status']}
             }).then(function(result){
                 console.log(result);
             }).catch(function(err){
