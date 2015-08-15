@@ -65,7 +65,7 @@ appServ.factory('ChartCreate',[function(){
     return chart;
 }]);
 function PouchService(){
-    this.db = new PouchDB('AppDatabase');
+    this.db = new PouchDB('AppDatabase',{adapter: 'websql'});
 }
 
 
@@ -106,10 +106,10 @@ appServ.factory('DataBase', function(pouchService, $q){
                 selector: {status: {$eq: key}},
             })).then(function(res){
                 return $q.all(res.docs.map(function(doc){
-                   temp2.push(doc.day);
-                   return temp[doc.hour]++;
+                    temp2.push(doc.day);
+                    return temp[doc.hour]++;
                 }));
-                }).then(function(data){
+            }).then(function(data){
                 temp2 = temp2.unique();
                 for(var i = 0; i < 24; i++){
                     if(temp2.length > 0){
@@ -133,25 +133,25 @@ appServ.factory('DataBase', function(pouchService, $q){
             date.addDays(-7);
             day2 = date.getDate();
             week2 = date.getWeek();
-            year2 = date.getFullYear()
+            year2 = date.getFullYear();
             $q.when(pouchService.db.find({
                 selector: {
                     $and: [
-                            {year: {$lte: year1}},
-                            {year: {$gte: year2}},
-                            {day: {$lte: day1}},
-                            {day: {$gte: day2}},
-                            {week: {$lte: week1}},
-                            {week: {$gte: week2}},
-                            {status: {$eq: key}}
+                        {year: {$lte: year1}},
+                        {year: {$gte: year2}},
+                        {day: {$lte: day1}},
+                        {day: {$gte: day2}},
+                        {week: {$lte: week1}},
+                        {week: {$gte: week2}},
+                        {status: {$eq: key}}
                     ]
                 },
             })).then(function(res){
                 return $q.all(res.docs.map(function(doc){
-                   temp2.push(doc.day);
-                   return temp[doc.hour]++;
+                    temp2.push(doc.day);
+                    return temp[doc.hour]++;
                 }));
-                }).then(function(data){
+            }).then(function(data){
                 temp2 = temp2.unique();
                 for(var i = 0; i < 24; i++){
                     if(temp2.length > 0){
@@ -186,7 +186,5 @@ appServ.factory('DataBase', function(pouchService, $q){
 
     };
 });
-
-
 
 

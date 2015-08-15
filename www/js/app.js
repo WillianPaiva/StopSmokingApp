@@ -1,6 +1,6 @@
 var app = angular.module('starter', ['ionic', 'starter.controllers', 'starter.services']);
 
-app.run(function($ionicPlatform) {
+app.run(function($ionicPlatform, DataBase) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -13,6 +13,9 @@ app.run(function($ionicPlatform) {
       // org.apache.cordova.statusbar required
       StatusBar.styleLightContent();
     }
+    DataBase.byStatus();
+    DataBase.lastWeek();
+    
   });
 });
 
