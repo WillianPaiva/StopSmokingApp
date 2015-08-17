@@ -18,7 +18,34 @@ appCtrl.controller('DashCtrl', function($scope, ChartCreate, DataBase, $ionicPla
         var tick = function(){
             var str = [];
             if(((new Date($localStorage.get('firstCig'))).isLearnFinished(1)) === true){
+                if(new Date($localStorage.get('nextCig')).getTime() > new Date().getTime()){
+                    var diff = Math.floor((new Date($localStorage.get('nextCig')).getTime() - new Date().getTime())/1000);
+                    var days, hours, minutes, seconds;
+                    days = Math.floor(diff / 86400);
+                    diff -= days * 86400;
+                    hours = Math.floor(diff / 3600) % 24;
+                    diff -= hours * 3600;
+                    minutes = Math.floor(diff / 60) % 60;
+                    diff -= minutes * 60;
+                    seconds = diff % 60;
+                    if(days > 0){
+                        $scope.button.tex = 'too early wait: ' + days + 'd ' +  hours + 'h ' +  minutes + 'm ' +  seconds + 's';
+                        $scope.button.class = "button button-block button-large button-assertive" ;
+                    }else if(hours > 0){
+                        $scope.button.tex ='too early wait: ' +  hours + 'h ' +  minutes + 'm ' +  seconds + 's';
+                        $scope.button.class = "button button-block button-large button-assertive" ;
+                    }else if(minutes > 0){
+                        $scope.button.tex = 'too early wait: ' + minutes + 'm ' + seconds + 's';
+                        $scope.button.class = "button button-block button-large button-assertive" ;
+                    }else if(seconds > 0){
+                        $scope.button.tex = 'almost there wait: ' +  seconds + 's';
+                        $scope.button.class = "button button-block button-large button-energized" ;
+                    }
+                }else{
+                    $scope.button.tex = 'Ready' ;
+                    $scope.button.class = "button button-block button-large button-balanced";
 
+                }
             }else{
                 $scope.message = "In learn period";
                 $scope.button.class = "button button-block button-large  button-calm";
@@ -35,7 +62,6 @@ appCtrl.controller('DashCtrl', function($scope, ChartCreate, DataBase, $ionicPla
 
         function getMedian(data) {
             $scope.timeToAdd = 60/data + (parseInt($localStorage.get('timeFrame'))) ;
-            console.log($scope.timeToAdd);
             $localStorage.set('nextCig', new Date($localStorage.get('lastCig')).addMinutes($scope.timeToAdd));
         }
 
