@@ -44,6 +44,16 @@ app.config(function($stateProvider, $urlRouterProvider) {
         controller: 'DashCtrl'
       }
     }
+  })
+
+  .state('tab.settings', {
+    url: '/settings',
+    views: {
+      'tab-settings': {
+        templateUrl: 'templates/tab-dash.settings',
+        controller: 'SettingsCtrl'
+      }
+    }
   });
 
 
