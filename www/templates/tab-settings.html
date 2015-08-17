@@ -5,13 +5,13 @@
                 <span class="input-label">
                     Timeframe
                 </span>
-                <input type="number" ng-model="timeFrame"> 
+                <input type="number" ng-model="timeFrame" ng-change="changeTimeFrame(timeFrame)"> 
             </label>
             <label class="item item-input ">
                 <span class="input-label">
                     Price
                 </span>
-                <input type="number" ng-model="price">
+                <input type="number" ng-model="price" ng-change="changePrice(price)">
             </label>
         </div>
     </ion-content>
