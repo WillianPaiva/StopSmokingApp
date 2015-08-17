@@ -105,5 +105,21 @@ appCtrl.controller('SettingsCtrl', function($scope, $localStorage){
     $scope.changePrice = function(data){
         $localStorage.set('price', data);
     };
-
 });
+
+appCtrl.controller('introCtrl',['$scope', '$ionicPopup', '$state', function($scope, $ionicPopup, $state) {
+    $scope.start = function() {
+        $state.go('tab.dash');
+    };
+
+    $scope.$on('wizard:StepFailed', function(e, args) {
+        if (args.index == 1 && args.direction == "next") {
+            $ionicPopup.alert({
+                title: 'Empty field',
+                template: 'Please enter a value!'
+            }).then(function (res) {
+                console.log('Field is empty');
+            });
+        }
+    });
+}] );

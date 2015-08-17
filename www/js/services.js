@@ -16,6 +16,9 @@ appServ.factory('$localStorage', ['$window', function($window){
         },
         removeItem: function(key){
             $window.localStorage.removeItem(key);
+        },
+        destroy: function(){
+            $window.localStorage.clear();
         }
 
     };
@@ -235,3 +238,16 @@ appServ.factory('DataBase', function(pouchService, $q){
 });
 
 
+
+appServ.factory('initialRun', function ($localStorage) {
+    return {
+      setInitialRun: function (initial) {
+          var test = (initial ? "true" : "false");
+          $localStorage.set('initialRun', test);
+      },
+      isInitialRun: function () {
+         var value = $localStorage.get('initialRun') || "true";
+         return value == "true";
+      }
+    };
+});

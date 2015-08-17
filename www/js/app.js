@@ -1,4 +1,4 @@
-var app = angular.module('starter', ['ionic', 'starter.controllers', 'starter.services']);
+var app = angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ionic.wizard']);
 
 app.run(function($ionicPlatform, DataBase) {
     $ionicPlatform.ready(function() {
@@ -19,17 +19,18 @@ app.run(function($ionicPlatform, DataBase) {
 
 //app.run( function(pouchService , $localStorage){
 //pouchService.db.destroy();
-//$localStorage.removeItem('firstRun');
-//$localStorage.removeItem('firstCig');
+//$localStorage.destroy();
 //}
 //);
 
 
-app.run( function($ionicPlatform, DataBase, $localStorage){
+app.run( function($ionicPlatform, $state, DataBase, initialRun, $localStorage){
     $ionicPlatform.ready( function(){
-        var firstRun = $localStorage.get('firstRun');
-        if(firstRun){
-        }else{
+        var state = "tab.dash";  // whatever, the main page of your app
+
+        if (initialRun.isInitialRun()) {
+            initialRun.setInitialRun(false);
+            state = "wizard.intro";
             DataBase.byStatus();
             DataBase.lastWeek();
             DataBase.lastWeekWithHour();
@@ -37,6 +38,12 @@ app.run( function($ionicPlatform, DataBase, $localStorage){
             $localStorage.set('price', 0.00);
             $localStorage.set('firstRun', true);
         }
+
+        $state.go(state);
+
+
+
+
     });
 }
 );
@@ -50,6 +57,19 @@ app.config(function($stateProvider, $urlRouterProvider) {
     // Set up the various states which the app can be in.
     // Each state's controller can be found in controllers.js
     $stateProvider
+
+    .state('wizard', {
+        url: '/wizard',
+        abstract: true,
+        template: '<ion-nav-view></ion-nav-view>'
+    })
+
+    .state('wizard.intro', {
+        url: '/intro',
+        templateUrl: 'templates/intro.html',
+        controller: 'introCtrl'
+    })
+
 
     // setup an abstract state for the tabs directive
     .state('tab', {
@@ -69,6 +89,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
             }
         }
     })
+
 
     .state('tab.settings', {
         url: '/settings',
