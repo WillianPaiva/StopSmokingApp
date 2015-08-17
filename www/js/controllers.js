@@ -23,4 +23,7 @@ appCtrl.controller('DashCtrl', function($scope, ChartCreate, DataBase, $ionicPla
     });
 });
 
-
+appCtrl.controller('SettingsCtrl', function($scope, $localStorage){
+    $scope.timeFrame;
+    $scope.price;
+});
