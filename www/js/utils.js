@@ -15,13 +15,13 @@ Date.prototype.addMinutes = function(min){
 
 };
 
-Date.prototype.isLearnFinished = function() {
+Date.prototype.isLearnFinished = function(time) {
     var today = new Date();
     var first = this;
-    if(first.addDays(1) <= today){
-        return false;
-    }else{
+    if(first.addDays(time) <= today){
         return true;
+    }else{
+        return false;
     }
 };
 

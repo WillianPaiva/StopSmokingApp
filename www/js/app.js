@@ -17,16 +17,26 @@ app.run(function($ionicPlatform, DataBase) {
     });
 });
 
+//app.run( function(pouchService , $localStorage){
+//pouchService.db.destroy();
+//$localStorage.removeItem('firstRun');
+//$localStorage.removeItem('firstCig');
+//}
+//);
+
+
 app.run( function($ionicPlatform, DataBase, $localStorage){
-    var firstRun = $localStorage.get('firstRun');
-    if(firstRun){
-    }else{
-        DataBase.byStatus();
-        DataBase.lastWeek();
-        $localStorage.set('timeFrame', 10);
-        $localStorage.set('price', 0.00);
-        $localStorage.set('firstRun', true);
-    }
+    $ionicPlatform.ready( function(){
+        var firstRun = $localStorage.get('firstRun');
+        if(firstRun){
+        }else{
+            DataBase.byStatus();
+            DataBase.lastWeek();
+            $localStorage.set('timeFrame', 10);
+            $localStorage.set('price', 0.00);
+            $localStorage.set('firstRun', true);
+        }
+    });
 }
 );
 

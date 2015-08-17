@@ -44,8 +44,6 @@ appServ.factory('ChartCreate',[function(){
             }],
             min: 0
         },
-        tooltip: {
-        },
         legend: {
             layout: 'vertical',
             align: 'center',
