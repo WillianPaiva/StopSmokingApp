@@ -50,7 +50,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
     url: '/settings',
     views: {
       'tab-settings': {
-        templateUrl: 'templates/tab-dash.settings',
+        templateUrl: 'templates/tab-settings.html',
         controller: 'SettingsCtrl'
       }
     }
