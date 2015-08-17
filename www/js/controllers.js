@@ -24,6 +24,13 @@ appCtrl.controller('DashCtrl', function($scope, ChartCreate, DataBase, $ionicPla
 });
 
 appCtrl.controller('SettingsCtrl', function($scope, $localStorage){
-    $scope.timeFrame;
-    $scope.price;
+    $scope.timeFrame = parseInt($localStorage.get('timeFrame'));
+    $scope.price = parseInt($localStorage.get('price'));
+    $scope.changeTimeFrame = function(data){
+        $localStorage.set('timeFrame', data);
+    };
+    $scope.changePrice = function(data){
+        $localStorage.set('price', data);
+    };
+    
 });
