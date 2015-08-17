@@ -31,7 +31,6 @@ appCtrl.controller('SettingsCtrl', function($scope, $localStorage){
     };
     $scope.changePrice = function(data){
         $localStorage.set('price', data);
-        console.log(data);
     };
     
 });
