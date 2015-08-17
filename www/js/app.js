@@ -32,6 +32,7 @@ app.run( function($ionicPlatform, DataBase, $localStorage){
         }else{
             DataBase.byStatus();
             DataBase.lastWeek();
+            DataBase.lastWeekWithHour();
             $localStorage.set('timeFrame', 10);
             $localStorage.set('price', 0.00);
             $localStorage.set('firstRun', true);

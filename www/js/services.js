@@ -163,9 +163,58 @@ appServ.factory('DataBase', function(pouchService, $q){
                 console.log(err);
             });
         },
+        getMedian: function(date, callback){
+            var temp2 = [];
+            var count = 0;
+            var day1, day2, week1, week2, year1, year2, hour;
+            day1 = date.getDate();
+            week1 = date.getWeek();
+            year1 = date.getFullYear();
+            hour = date.getHours();
+            date.addDays(-7);
+            day2 = date.getDate();
+            week2 = date.getWeek();
+            year2 = date.getFullYear();
+            $q.when(pouchService.db.find({
+                selector: {
+                    $and: [
+                        {year: {$lte: year1}},
+                        {year: {$gte: year2}},
+                        {day: {$lte: day1}},
+                        {day: {$gte: day2}},
+                        {week: {$lte: week1}},
+                        {week: {$gte: week2}},
+                    ]
+                },
+            })).then(function(res){
+                return $q.all(res.docs.map(function(doc){
+                    temp2.push(doc.day);
+                    return count++;
+                }));
+            }).then(function(data){
+                temp2 = temp2.unique();
+                    if(temp2.length > 0){
+                        count = count/temp2.length;
+                    }
+                return count;
+            }).then(function(data){
+                return callback(count);
+            }).catch(function(err){
+                console.log(err);
+            });
+        },
         byStatus: function(){
             pouchService.db.createIndex({
                 index: {fields: ['status']}
+            }).then(function(result){
+                console.log(result);
+            }).catch(function(err){
+                console.log(err);
+            });
+        },
+        lastWeekWithHour: function(){
+            pouchService.db.createIndex({
+                index: {fields: ['year', 'week', 'hour', 'day']}
             }).then(function(result){
                 console.log(result);
             }).catch(function(err){

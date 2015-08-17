@@ -1,9 +1,16 @@
 <ion-view view-title="Dashboard">
     <ion-content class="padding">
+        <style>
+            #chart {
+                height:300px;
+                width:100%;
+            }
+        </style>
+
         <highchart id="chart" config="chartConfig"></highchart>
-            <button class="{{button.class}}" ng-click="click()">
-                {{button.tex}}
-            </button>
+        <button class="{{button.class}}" ng-click="click()">
+            {{button.tex}}
+        </button>
     </ion-content>
 </ion-view>
 
