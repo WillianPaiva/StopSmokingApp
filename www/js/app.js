@@ -13,6 +13,27 @@ app.run(function($ionicPlatform, DataBase) {
             // org.apache.cordova.statusbar required
             StatusBar.styleLightContent();
         }
+        var admobid = {};
+        // select the right Ad Id according to platform
+        if( /(android)/i.test(navigator.userAgent) ) { 
+            admobid = { // for Android
+                banner: 'ca-app-pub-1276072278118519/5171040607',
+                interstitial: ''
+            };
+        } else if(/(ipod|iphone|ipad)/i.test(navigator.userAgent)) {
+            admobid = { // for iOS
+                banner: 'ca-app-pub-1276072278118519/8124507002',
+                interstitial: ''
+            };
+        } else {
+            admobid = { // for Windows Phone
+                banner: '',
+                interstitial: ''
+            };
+        }
+        //show admob banner at botton 
+        if(window.AdMob){window.AdMob.createBanner( admobid.banner );}
+        
 
     });
 });
@@ -26,7 +47,7 @@ app.run(function($ionicPlatform, DataBase) {
 
 app.run( function($ionicPlatform, $state, DataBase, initialRun, $localStorage){
     $ionicPlatform.ready( function(){
-        var state = "wizard.intro";  // whatever, the main page of your app
+        var state = "tab.dash";  // whatever, the main page of your app
 
         if (initialRun.isInitialRun()) {
             initialRun.setInitialRun(false);
