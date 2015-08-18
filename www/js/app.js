@@ -111,6 +111,16 @@ app.config(function($stateProvider, $urlRouterProvider) {
         }
     })
 
+    .state('tab.eco', {
+        url: '/eco',
+        views: {
+            'tab-eco': {
+                templateUrl: 'templates/tab-eco.html',
+                controller: 'EcoCtrl'
+            }
+        }
+    })
+
 
     .state('tab.settings', {
         url: '/settings',
