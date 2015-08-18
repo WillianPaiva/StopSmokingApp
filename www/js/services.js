@@ -24,47 +24,7 @@ appServ.factory('$localStorage', ['$window', function($window){
     };
 }]);
 
-appServ.factory('ChartCreate',[function(){
-    var chart = {
-        title: {
-            text: 'Weekly Smoke Pattern',
-        },
-        xAxis: {
-            title:{
-                text: 'Hours Of the Day'
-            },
-            categories: ['00', '01', '02', '03', '04', '05',
-            '06', '07', '08', '09', '10', '11' , '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23']
-        },
-        yAxis: {
-            title: {
-                text: 'cig per hour'
-            },
-            plotLines: [{
-                value: 0,
-                width: 1,
-                color: '#808080'
-            }],
-            min: 0
-        },
-        legend: {
-            layout: 'vertical',
-            align: 'center',
-            verticalAlign: 'middle',
-            borderWidth: 0
-        },
-        series: [{
-            name: 'Base line',
-            data: []
-        }, 
-        {
-            name: 'last 7 days',
-            data: []
-        },
-        ],
-    };
-    return chart;
-}]);
+
 function PouchService(){
     this.db = new PouchDB('AppDatabase',{adapter: 'websql'});
 }
@@ -222,6 +182,33 @@ appServ.factory('DataBase', function(pouchService, $q){
                 console.log(err);
             });
         },
+        getCount: function(key,callback){
+            var days = [];
+            var count = 0;
+            $q.when(pouchService.db.find({
+                selector: {status: {$eq: key}},
+            })).then(function(res){
+                return $q.all(res.docs.map(function(doc){
+                    days.push(doc.day);
+                    return count++;
+                }));
+
+            }).then(function(data){
+                days = days.unique();
+                if(days.length > 0){
+                    count = count/days.length;
+                }
+                count = (count*30)*(parseInt($localStorage.get('price'))/20);
+                return count;
+
+            }).then(function(data){
+                callback(count);
+            }).catch(function(err){
+                console.log(err);
+            });
+
+        },
+
         byStatus: function(){
             pouchService.db.createIndex({
                 index: {fields: ['status']}
@@ -276,22 +263,22 @@ appServ.factory('cigTime', function($localStorage, DataBase){
 
 
     return{
-    isLearnFinished: function(time){
-        var test = new Date($localStorage.get('firstCig')).isLearnFinished(time) === true;
-        return test;
-    },
-    firstCigSet: function(date){
-        $localStorage.set('firstCig', date);
-    },
-    firstCigGet: function(){
-        return new Date($localStorage.get('firstCig'));
-    },
-    getNextCig: function(){
-        return new Date($localStorage.get('nextCig'));
-    },
+        isLearnFinished: function(time){
+            var test = new Date($localStorage.get('firstCig')).isLearnFinished(time) === true;
+            return test;
+        },
+        firstCigSet: function(date){
+            $localStorage.set('firstCig', date);
+        },
+        firstCigGet: function(){
+            return new Date($localStorage.get('firstCig'));
+        },
+        getNextCig: function(){
+            return new Date($localStorage.get('nextCig'));
+        },
 
-    setNextCig: function(date){
-        DataBase.getMedian(date, getMedian);
-    }
-};
+        setNextCig: function(date){
+            DataBase.getMedian(date, getMedian);
+        }
+    };
 });

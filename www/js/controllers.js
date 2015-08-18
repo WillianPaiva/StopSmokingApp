@@ -1,8 +1,7 @@
-var appCtrl = angular.module('starter.controllers', ['highcharts-ng']);
+var appCtrl = angular.module('starter.controllers', ['chart.js']);
 
-appCtrl.controller('DashCtrl', function($scope, ChartCreate, DataBase, $ionicPlatform, $localStorage, $timeout, cigTime) {
+appCtrl.controller('DashCtrl', function($scope, DataBase, $ionicPlatform, $localStorage, $timeout, cigTime) {
     $ionicPlatform.ready(function(){
-
         $scope.chartConfig = ChartCreate;
         DataBase.setChartLastWeek('NotLearn', new Date(), setMedian);
         DataBase.setChart('Learn', setBaseLine);
@@ -11,8 +10,45 @@ appCtrl.controller('DashCtrl', function($scope, ChartCreate, DataBase, $ionicPla
         $scope.button.tex = 'loading...';
         $scope.message = ""; 
         $scope.tickInterval = 1000;
+        $scope.chartBaseline = [0];
+        $scope.chartLastWeek = [0];        
+        $scope.labels = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11' , '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'];
 
+        $scope.series = ['Base Line', 'Last Week'];
+        $scope.data = [
+            $scope.chartBaseline,
+            $scope.chartLastWeek 
+        ];
+        $scope.onClick = function (points, evt) {
+            console.log(points, evt);
+        };
+        function setChartRange(){
+            var labels = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11' , '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'];
+            var top = 0;
+            var bot = 0;
+            for(var x = 0; x < 24 ; x++){
+                if($scope.chartBaseline[x] === 0 && $scope.chartLastWeek[x] === 0){
+                    bot++;
+                }else{break;}
+            }
+            for(var y = 23; y > 0 ; y--){
+                if($scope.chartBaseline[y] === 0 && $scope.chartLastWeek[y] === 0){
+                    top++;
+                }else{break;}
+            }
+            labels.splice(0,bot);
+            labels.splice((23-top),top);
+            $scope.chartBaseline.splice(0,bot);
+            $scope.chartBaseline.splice((23-top),top);
+            $scope.chartLastWeek.splice(0,bot);
+            $scope.chartLastWeek.splice((23-top),top);
+            $scope.labels = labels   ;
+            $scope.data = [
+                $scope.chartBaseline,
+                $scope.chartLastWeek 
+            ];
 
+        }
 
         var tick = function(){
             var str = [];
@@ -57,61 +93,17 @@ appCtrl.controller('DashCtrl', function($scope, ChartCreate, DataBase, $ionicPla
         $timeout(tick, $scope.tickInterval);
 
 
-        function setChartRange(beg,fin) {
-            var range =  ['00', '01', '02', '03', '04', '05','06', '07', '08', '09', '10', '11' , '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'];
-            range.splice(0,beg);
-            range.splice((23-fin),fin);
-            $scope.chartConfig.xAxis.categories = range;
-        }
 
 
         function setBaseLine(data){
-            var beg = 0;
-            var fin = 0;
-            for(var x = 0; x<24; x++){
-                if(data[x] === 0){
-                    beg++; 
-                }else{
-                    break;
-                }
-            }
-
-            for(var y = 23 ; x>0 ; x--){
-                if(data[x] === 0){
-                    fin++; 
-                }else{
-                    break;
-                }
-            }
-            data.splice(0,beg);
-            data.splice((23-fin),fin);
-
-            $scope.chartConfig.series[0].data = data;
-            setChartRange(beg,fin);
+            $scope.chartBaseline = data;
+            $scope.data[0] = $scope.chartBaseline;
+            setChartRange();
         }
         function setMedian(data){
-            var beg = 0;
-            var fin = 0;
-            for(var x = 0; x<24; x++){
-                if(data[x] === 0){
-                    beg++; 
-                }else{
-                    break;
-                }
-            }
-
-            for(var y = 23 ; x>0 ; x--){
-                if(data[x] === 0){
-                    fin++; 
-                }else{
-                    break;
-                }
-            }
-            data.splice(0,beg);
-            data.splice((23-fin),fin);
-
-            $scope.chartConfig.series[1].data = data;
-            setChartRange(beg,fin);
+            $scope.chartLastWeek  = data;
+            $scope.data[1] = $scope.chartLastWeek;
+            setChartRange();
         }
         function insert() {
             if(cigTime.isLearnFinished(1)){
@@ -136,6 +128,11 @@ appCtrl.controller('DashCtrl', function($scope, ChartCreate, DataBase, $ionicPla
 
     });
 });
+
+appCtrl.controller('EcoCtrl', function($scope, limitToFilter){
+
+});
+
 
 appCtrl.controller('SettingsCtrl', function($scope, $localStorage){
     $scope.timeFrame = parseInt($localStorage.get('timeFrame'));

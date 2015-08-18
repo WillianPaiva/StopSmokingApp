@@ -1,4 +1,4 @@
-var app = angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ionic.wizard']);
+var app = angular.module('starter', ['ionic', 'starter.controllers', 'starter.services',  'ionic.wizard', 'chart.js']);
 
 app.run(function($ionicPlatform, DataBase) {
     $ionicPlatform.ready(function() {
@@ -33,7 +33,7 @@ app.run(function($ionicPlatform, DataBase) {
         }
         //show admob banner at botton 
         if(window.AdMob){window.AdMob.createBanner( admobid.banner );}
-        
+
 
     });
 });
@@ -137,3 +137,16 @@ app.config(function($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise('/tab/dash');
 
 });
+
+
+app.config(['ChartJsProvider', function (ChartJsProvider) {
+    // Configure all charts
+    ChartJsProvider.setOptions({
+        colours: ['#FF3300', '#3399FF'],
+        responsive: true
+    });
+    // Configure all line charts
+    ChartJsProvider.setOptions('Line', {
+        datasetFill: false
+    });
+}]);
