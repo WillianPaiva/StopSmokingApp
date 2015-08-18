@@ -1,12 +1,13 @@
 var appCtrl = angular.module('starter.controllers', ['highcharts-ng']);
 
-appCtrl.controller('DashCtrl', function($scope, ChartCreate, DataBase, $ionicPlatform, $localStorage, $timeout) {
+appCtrl.controller('DashCtrl', function($scope, ChartCreate, DataBase, $ionicPlatform, $localStorage, $timeout, cigTime) {
     $ionicPlatform.ready(function(){
 
-
         $scope.chartConfig = ChartCreate;
-        DataBase.setChart('Learn', setBaseLine);
-        DataBase.setChartLastWeek('NotLearn', new Date(), setMedian);
+        if(cigTime.isLearnFinished(1)){
+            DataBase.setChart('Learn', setBaseLine);
+            DataBase.setChartLastWeek('NotLearn', new Date(), setMedian);
+        }
         $scope.button = {};
         $scope.button.class = "button button-block button-positive";
         $scope.button.tex = 'loading...';
@@ -17,9 +18,9 @@ appCtrl.controller('DashCtrl', function($scope, ChartCreate, DataBase, $ionicPla
 
         var tick = function(){
             var str = [];
-            if(((new Date($localStorage.get('firstCig'))).isLearnFinished(1)) === true){
-                if(new Date($localStorage.get('nextCig')).getTime() > new Date().getTime()){
-                    var diff = Math.floor((new Date($localStorage.get('nextCig')).getTime() - new Date().getTime())/1000);
+            if(cigTime.isLearnFinished(1)){
+                if(cigTime.getNextCig().getTime() > new Date().getTime()){
+                    var diff = Math.floor((cigTime.getNextCig().getTime() - new Date().getTime())/1000);
                     var days, hours, minutes, seconds;
                     days = Math.floor(diff / 86400);
                     diff -= days * 86400;
@@ -60,10 +61,6 @@ appCtrl.controller('DashCtrl', function($scope, ChartCreate, DataBase, $ionicPla
 
 
 
-        function getMedian(data) {
-            $scope.timeToAdd = 60/data + (parseInt($localStorage.get('timeFrame'))) ;
-            $localStorage.set('nextCig', new Date($localStorage.get('lastCig')).addMinutes($scope.timeToAdd));
-        }
 
         function setBaseLine(data){
             $scope.chartConfig.series[0].data = data;
@@ -72,14 +69,13 @@ appCtrl.controller('DashCtrl', function($scope, ChartCreate, DataBase, $ionicPla
             $scope.chartConfig.series[1].data = data;
         }
         function insert() {
-            if(((new Date($localStorage.get('firstCig'))).isLearnFinished(1)) === true){
+            if(cigTime.isLearnFinished(1)){
                 DataBase.InsertDate(new Date(), 'NotLearn');
                 DataBase.setChartLastWeek('NotLearn', new Date(), setMedian);
-                DataBase.getMedian(new Date(), getMedian);
+                cigTime.setNextCig(new Date());
             }else{
                 DataBase.InsertDate(new Date(), 'Learn');
                 DataBase.setChart('Learn', setBaseLine);
-                DataBase.getMedian(new Date(), getMedian);
             }
             $localStorage.set('lastCig', new Date());
         } 
@@ -88,7 +84,7 @@ appCtrl.controller('DashCtrl', function($scope, ChartCreate, DataBase, $ionicPla
             if($localStorage.get('firstCig')){
                 insert();
             }else{
-                $localStorage.set('firstCig', new Date());
+                cigTime.firstCigSet(new Date());
                 insert();
             }
         };

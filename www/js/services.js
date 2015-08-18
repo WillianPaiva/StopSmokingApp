@@ -112,10 +112,18 @@ appServ.factory('DataBase', function(pouchService, $q){
                 }));
             }).then(function(data){
                 temp2 = temp2.unique();
+                var h = new Date().getHours();
                 for(var i = 0; i < 24; i++){
-                    if(temp2.length > 0){
-                        temp[i] = (temp[i]/temp2.length);
+                    if(i <= h){
+                        if(temp2.length > 0){
+                            temp[i] = (temp[i]/temp2.length);
+                        }
+                    }else{
+                        if((temp2.length -1) > 0){
+                            temp[i] = (temp[i]/(temp2.length -1));
+                        }
                     }
+
                 }
                 return temp;
             }).then(function(data){
@@ -154,10 +162,18 @@ appServ.factory('DataBase', function(pouchService, $q){
                 }));
             }).then(function(data){
                 temp2 = temp2.unique();
+                var h = new Date().getHours();
                 for(var i = 0; i < 24; i++){
-                    if(temp2.length > 0){
-                        temp[i] = (temp[i]/temp2.length);
+                    if(i <= h){
+                        if(temp2.length > 0){
+                            temp[i] = (temp[i]/temp2.length);
+                        }
+                    }else{
+                        if((temp2.length -1) > 0){
+                            temp[i] = (temp[i]/(temp2.length -1));
+                        }
                     }
+
                 }
                 return temp;
             }).then(function(data){
@@ -196,9 +212,9 @@ appServ.factory('DataBase', function(pouchService, $q){
                 }));
             }).then(function(data){
                 temp2 = temp2.unique();
-                    if(temp2.length > 0){
-                        count = count/temp2.length;
-                    }
+                if(temp2.length > 0){
+                    count = count/temp2.length;
+                }
                 return count;
             }).then(function(data){
                 return callback(count);
@@ -241,13 +257,41 @@ appServ.factory('DataBase', function(pouchService, $q){
 
 appServ.factory('initialRun', function ($localStorage) {
     return {
-      setInitialRun: function (initial) {
-          var test = (initial ? "true" : "false");
-          $localStorage.set('initialRun', test);
-      },
-      isInitialRun: function () {
-         var value = $localStorage.get('initialRun') || "true";
-         return value == "true";
-      }
+        setInitialRun: function (initial) {
+            var test = (initial ? "true" : "false");
+            $localStorage.set('initialRun', test);
+        },
+        isInitialRun: function () {
+            var value = $localStorage.get('initialRun') || "true";
+            return value == "true";
+        }
     };
+});
+
+appServ.factory('cigTime', function($localStorage, DataBase){
+    var getMedian = function (data) {
+        var timeToAdd = 60/data + (parseInt($localStorage.get('timeFrame'))) ;
+        $localStorage.set('nextCig', new Date($localStorage.get('lastCig')).addMinutes(timeToAdd));
+    };
+
+
+    return{
+    isLearnFinished: function(time){
+        var test = new Date($localStorage.get('firstCig')).isLearnFinished(time) === true;
+        return test;
+    },
+    firstCigSet: function(date){
+        $localStorage.set('firstCig', date);
+    },
+    firstCigGet: function(){
+        return new Date($localStorage.get('firstCig'));
+    },
+    getNextCig: function(){
+        return new Date($localStorage.get('nextCig'));
+    },
+
+    setNextCig: function(date){
+        DataBase.getMedian(date, getMedian);
+    }
+};
 });
