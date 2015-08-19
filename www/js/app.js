@@ -47,6 +47,7 @@ app.run(function($ionicPlatform, DataBase) {
 
 app.run( function($ionicPlatform, $state, DataBase, initialRun, $localStorage){
     $ionicPlatform.ready( function(){
+            DataBase.byMonthYear();
         var state = "tab.dash";  // whatever, the main page of your app
 
         if (initialRun.isInitialRun()) {
@@ -55,6 +56,7 @@ app.run( function($ionicPlatform, $state, DataBase, initialRun, $localStorage){
             DataBase.byStatus();
             DataBase.lastWeek();
             DataBase.lastWeekWithHour();
+            DataBase.byMonthYear();
             $localStorage.set('timeFrame', 10);
             $localStorage.set('price', 0.00);
             $localStorage.set('firstRun', true);
@@ -147,7 +149,6 @@ app.config(['ChartJsProvider', function (ChartJsProvider) {
     });
     // Configure all line charts
     ChartJsProvider.setOptions('Line', {
-        datasetFill: false
         datasetFill: true
     });
 }]);
