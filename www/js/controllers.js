@@ -2,7 +2,6 @@ var appCtrl = angular.module('starter.controllers', ['chart.js']);
 
 appCtrl.controller('DashCtrl', function($scope, DataBase, $ionicPlatform, $localStorage, $timeout, cigTime) {
     $ionicPlatform.ready(function(){
-        $scope.chartConfig = ChartCreate;
         DataBase.setChartLastWeek('NotLearn', new Date(), setMedian);
         DataBase.setChart('Learn', setBaseLine);
         $scope.button = {};
