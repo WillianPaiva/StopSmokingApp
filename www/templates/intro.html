@@ -1,7 +1,7 @@
 <ion-view>
     <ion-nav-buttons side="left">
         <button class="button button-light no-animation"
-                ng-click="start()">
+            ng-click="start()">
             Skip wizard
         </button>
         <button class="button button-light no-animation" ion-wizard-previous>
@@ -17,38 +17,41 @@
         </button>
     </ion-nav-buttons>
     <ion-slide-box ion-wizard>
+
         <ion-slide ion-wizard-step>
             <ion-wizard-content class="has-header">
-            <div class="row">
-                <div class="col col-center">
-                    <div class="card rounded">
-                        <div class="item">
-                            <h2 class="positive">Thanks for trying out this wizard!</h2>
-                        </div>
-                        <div class="item item-text-wrap">
-                            <p>
-                                Click the buttons above
-                            </p>
+                <div class="row">
+                    <div class="col col-center">
+                        <div class="card rounded">
+                            <div class="item">
+                                <h2 class="positive">Thanks for trying out this wizard!</h2>
+                            </div>
+                            <div class="item item-text-wrap">
+                                <p>
+                                    Click the buttons above
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
             </ion-wizard-content>
         </ion-slide>
-        <ion-slide ion-wizard-step condition="step2.name">
+
+        <ion-slide ion-wizard-step >
             <ion-wizard-content class="has-header">
-            <div class="row">
-                <div class="col col-center">
-                    <div class="item item-input-inset">
-                        <label class="item item-input-wrapper">
-                            <i class="icon ion-search placeholder-icon"></i>
-                            <input type="text" placeholder="Type something" ng-model="step2.name" autocomplete="off">
-                        </label>
+                <div class="row">
+                    <div class="col col-center">
+                        <div class="item item-input-inset">
+                            <label class="item item-input-wrapper">
+                                <i class="icon ion-search placeholder-icon"></i>
+                                <input type="text" placeholder="Type something" ng-model="step2.name" autocomplete="off">
+                            </label>
+                        </div>
                     </div>
                 </div>
-            </div>
             </ion-wizard-content>
         </ion-slide>
+
         <ion-slide ion-wizard-step class="has-header">
             <div class="row">
                 <div class="col col-center">
@@ -57,4 +60,5 @@
                 </div>
             </div>
         </ion-slide>
+
     </ion-slide-box>
