@@ -182,8 +182,28 @@ appServ.factory('DataBase', function(pouchService, $q){
                 console.log(err);
             });
         },
-        getCount: function(key,callback){
+        getMonths: function(callback){
             var days = [];
+            $q.when(pouchService.db.allDocs({
+                include_docs: true
+            })).then(function(res){
+                return $q.all(res.rows.map(function(row){
+                    if(row.doc.day){
+                        days.push([row.doc.month , row.doc.year]);
+                        //days.push();
+                    }
+                    return days;
+                }));
+
+            }).then(function(data){
+                days = days.unique();
+            }).then(function(data){
+                callback(days);
+            }).catch(function(err){
+                console.log(err);
+            });
+
+        },
             var count = 0;
             $q.when(pouchService.db.find({
                 selector: {status: {$eq: key}},
