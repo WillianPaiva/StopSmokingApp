@@ -34,7 +34,7 @@ appServ.service('pouchService', PouchService);
 
 
 
-appServ.factory('DataBase', function(pouchService, $q){
+appServ.factory('DataBase', function(pouchService, $q, $localStorage){
     return{
         InsertDate: function(date, status){
             var day, month, year, week, hour, minute, weekDay;  
@@ -204,29 +204,33 @@ appServ.factory('DataBase', function(pouchService, $q){
             });
 
         },
+        getMothExpense: function(month,year, dat){
             var count = 0;
+            var days = [];
             $q.when(pouchService.db.find({
-                selector: {status: {$eq: key}},
+                selector: {
+                    $and: [
+                        {year: {$eq: year}},
+                        {month: {$eq: month}},
+                    ]
+                },
             })).then(function(res){
                 return $q.all(res.docs.map(function(doc){
                     days.push(doc.day);
                     return count++;
                 }));
-
-            }).then(function(data){
+            }).then(function(res){
                 days = days.unique();
                 if(days.length > 0){
                     count = count/days.length;
                 }
                 count = (count*30)*(parseInt($localStorage.get('price'))/20);
                 return count;
-
-            }).then(function(data){
-                callback(count);
+            }).then(function(result){
+                return dat.push(count);
             }).catch(function(err){
                 console.log(err);
             });
-
         },
 
         byStatus: function(){
