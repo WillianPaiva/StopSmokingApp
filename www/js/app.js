@@ -148,5 +148,6 @@ app.config(['ChartJsProvider', function (ChartJsProvider) {
     // Configure all line charts
     ChartJsProvider.setOptions('Line', {
         datasetFill: false
+        datasetFill: true
     });
 }]);
