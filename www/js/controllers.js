@@ -119,7 +119,26 @@ appCtrl.controller('DashCtrl', function($scope, DataBase, $ionicPlatform, $local
     });
 });
 
-appCtrl.controller('EcoCtrl', function($scope, limitToFilter){
+appCtrl.controller('EcoCtrl', function($scope, $localStorage, DataBase){
+    $scope.serie = [0];
+    $scope.data = [$scope.serie];
+
+    $scope.labels = [];
+    $scope.series = ['Expenses'];
+    $scope.dat = [[]];
+    function getdata(data) {
+        $scope.serie = [];
+        var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        $scope.labels = [];
+        for(var x = 0 ; x < data.length ; x++){
+            $scope.labels.push(months[data[x][0]]+'/'+data[x][1]);
+            DataBase.getMothExpense(data[x][0],data[x][1],$scope.serie);
+        }
+    }
+    $scope.$watch('serie', function(){
+        $scope.data = [$scope.serie];
+    });
+    DataBase.getMonths(getdata);
 
 });
 
