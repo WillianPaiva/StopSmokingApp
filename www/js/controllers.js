@@ -120,21 +120,33 @@ appCtrl.controller('DashCtrl', function($scope, DataBase, $ionicPlatform, $local
 });
 
 appCtrl.controller('EcoCtrl', function($scope, $localStorage, DataBase){
-    $scope.serie = [0];
+    $scope.serie = [];
     $scope.data = [$scope.serie];
-
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     $scope.labels = [];
     $scope.series = ['Expenses'];
     $scope.dat = [[]];
+
+
+
     function getdata(data) {
         $scope.serie = [];
-        var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
         $scope.labels = [];
-        for(var x = 0 ; x < data.length ; x++){
-            $scope.labels.push(months[data[x][0]]+'/'+data[x][1]);
-            DataBase.getMothExpense(data[x][0],data[x][1],$scope.serie);
-        }
+        startup(data);
     }
+    function startup(data){
+        if(data.length > 0){
+            DataBase.getMothExpense(data,insertSerie);
+        }
+
+    }
+    function insertSerie(label,value,data){
+        $scope.labels.push(label);
+        $scope.serie.push(value);
+        startup(data);
+    }
+    //$scope.labels.push(months[data[x][0]]+'/'+data[x][1]);
+
     $scope.$watch('serie', function(){
         $scope.data = [$scope.serie];
     });

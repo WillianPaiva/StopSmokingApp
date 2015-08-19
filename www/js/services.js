@@ -204,14 +204,16 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
             });
 
         },
-        getMothExpense: function(month,year, dat){
+        getMothExpense: function(data, callback){
+            var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
             var count = 0;
             var days = [];
             $q.when(pouchService.db.find({
                 selector: {
                     $and: [
-                        {year: {$eq: year}},
-                        {month: {$eq: month}},
+                        {year: {$eq: data[0][1]}},
+                        {month: {$eq: data[0][0]}},
                     ]
                 },
             })).then(function(res){
@@ -227,7 +229,9 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
                 count = (count*30)*(parseInt($localStorage.get('price'))/20);
                 return count;
             }).then(function(result){
-                return dat.push(count);
+                var label = months[data[0][0]]+'/'+data[0][1];
+                data.splice(0,1);
+                return callback(label,count,data);
             }).catch(function(err){
                 console.log(err);
             });
