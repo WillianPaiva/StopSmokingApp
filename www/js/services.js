@@ -227,6 +227,15 @@ appServ.factory('DataBase', function(pouchService, $q){
                 console.log(err);
             });
         },
+        byMonthYear: function(){
+            pouchService.db.createIndex({
+                index: {fields: ['year', 'month']}
+            }).then(function(result){
+                console.log(result);
+            }).catch(function(err){
+                console.log(err);
+            });
+        },
         lastWeek: function(){
             pouchService.db.createIndex({
                 index: {fields: ['year', 'week', 'day', 'status']}
