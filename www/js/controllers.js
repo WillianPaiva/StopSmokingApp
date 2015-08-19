@@ -42,7 +42,7 @@ appCtrl.controller('DashCtrl', function($scope, DataBase, $ionicPlatform, $local
 
         var tick = function(){
             var str = [];
-            if(cigTime.isLearnFinished(1)){
+            if(cigTime.isLearnFinished(7)){
                 if(cigTime.getNextCig().getTime() > new Date().getTime()){
                     var diff = Math.floor((cigTime.getNextCig().getTime() - new Date().getTime())/1000);
                     var days, hours, minutes, seconds;
