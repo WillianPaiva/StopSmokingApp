@@ -23,24 +23,15 @@ appCtrl.controller('DashCtrl', function($scope, DataBase, $ionicPlatform, $local
         };
         function setChartRange(){
             var labels = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11' , '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'];
-            var top = 0;
             var bot = 0;
             for(var x = 0; x < 24 ; x++){
                 if($scope.chartBaseline[x] === 0 && $scope.chartLastWeek[x] === 0){
                     bot++;
                 }else{break;}
             }
-            for(var y = 23; y > 0 ; y--){
-                if($scope.chartBaseline[y] === 0 && $scope.chartLastWeek[y] === 0){
-                    top++;
-                }else{break;}
-            }
             labels.splice(0,bot);
-            labels.splice((23-top),top);
             $scope.chartBaseline.splice(0,bot);
-            $scope.chartBaseline.splice((23-top),top);
             $scope.chartLastWeek.splice(0,bot);
-            $scope.chartLastWeek.splice((23-top),top);
             $scope.labels = labels   ;
             $scope.data = [
                 $scope.chartBaseline,
