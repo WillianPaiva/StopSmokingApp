@@ -122,7 +122,6 @@ appCtrl.controller('DashCtrl', function($scope, DataBase, $ionicPlatform, $local
 appCtrl.controller('EcoCtrl', function($scope, $localStorage, DataBase){
     $scope.serie = [];
     $scope.data = [$scope.serie];
-    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     $scope.labels = [];
     $scope.series = ['Expenses'];
     $scope.dat = [[]];
