@@ -1,20 +1,32 @@
 <ion-view view-title="Settings">
     <ion-content class="padding">
-            <div class="item range range-positive">
-                <span class="input-label">
-                    Timeframe: {{timeFrame}}
-                </span>
-                <i class="icon ion-arrow-graph-up-right" ></i>
-                <input type="range" ng-model="timeFrame" ng-change="changeTimeFrame(timeFrame)" min="0" max="60"> 
-                <i class="icon ion-arrow-graph-down-right" ></i>
-            </div>
+        <div class="item range range-positive">
             <span class="input-label">
-                Price
+                Timeframe: {{timeFrame}}
             </span>
-            <label class="item item-input ">
-                <i class="icon ion-social-usd "></i>
-                <input type="number"  ng-model="price" ng-change="changePrice(price)">
-            </label>
+            <i class="icon ion-arrow-graph-up-right" ></i>
+            <input type="range" ng-model="timeFrame" ng-change="changeTimeFrame(timeFrame)" min="5" max="60"> 
+            <i class="icon ion-arrow-graph-down-right" ></i>
+        </div>
+        <span class="input-label">
+            Price
+        </span>
+        <label class="item item-input ">
+            <i class="icon ion-social-usd "></i>
+            <input type="number"  ng-model="price" ng-change="changePrice(price)">
+        </label>
+
+
+
+        <div class="item range range-positive">
+            <span class="input-label">
+                learnTime: {{learnTime}}
+            </span>
+            <i class="icon ion-ios-compose-outline" ></i>
+            <input type="range" ng-model="learnTime" ng-change="learnTimeChanged(learnTime)" min="3" max="7"> 
+            <i class="icon ion-ios-compose" ></i>
+        </div>
+        
     </ion-content>
 </ion-view>
 
