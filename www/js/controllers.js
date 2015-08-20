@@ -141,9 +141,9 @@ appCtrl.controller('EcoCtrl', function($scope, $localStorage, DataBase, $ionicHi
 
     });
     DataBase.getMonths(getdata);
-    $scope.$on("$ionicView.afterLeave", function () {
-        $ionicHistory.clearCache();
-    }); 
+    //$scope.$on("$ionicView.afterLeave", function () {
+    //$ionicHistory.clearCache();
+    //}); 
 });
 
 
