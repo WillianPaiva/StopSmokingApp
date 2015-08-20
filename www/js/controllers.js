@@ -119,8 +119,8 @@ appCtrl.controller('DashCtrl', function($scope, DataBase, $ionicPlatform,$ionicH
     });
 });
 
-appCtrl.controller('EcoCtrl', function($scope, $localStorage, DataBase){
-    $scope.serie = [];
+appCtrl.controller('EcoCtrl', function($scope, $localStorage, DataBase, $ionicHistory){
+    $scope.serie = [0];
     $scope.data = [$scope.serie];
     $scope.labels = [];
     $scope.series = ['Expenses'];
@@ -151,6 +151,9 @@ appCtrl.controller('EcoCtrl', function($scope, $localStorage, DataBase){
     });
     DataBase.getMonths(getdata);
 
+    $scope.$on("$ionicView.afterLeave", function () {
+        $ionicHistory.clearCache();
+    }); 
 });
 
 
