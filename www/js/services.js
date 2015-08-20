@@ -95,7 +95,7 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
                 console.log(err);
             });
         },
-        setChartLastWeek: function(key, date, callback){
+        setChartLastWeek: function(date, callback){
             var temp = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
             var temp2 = [];
             var day1, day2, week1, week2, year1, year2;
@@ -115,7 +115,6 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
                         {day: {$gte: day2}},
                         {week: {$lte: week1}},
                         {week: {$gte: week2}},
-                        {status: {$eq: key}}
                     ]
                 },
             })).then(function(res){
@@ -187,12 +186,16 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
         },
         getMonths: function(callback){
             var days = [];
-            $q.when(pouchService.db.allDocs({
-                include_docs: true
+            $q.when(pouchService.db.find({
+                selector: {
+                    year: {$exists: true},
+                    month: {$exists: true}
+                 },
+                sort: ['year','month']
             })).then(function(res){
-                return $q.all(res.rows.map(function(row){
-                    if(row.doc.day){
-                        days.push([row.doc.month , row.doc.year]);
+                return $q.all(res.docs.map(function(doc){
+                    if(doc.day){
+                        days.push([doc.month , doc.year]);
                         //days.push();
                     }
                     return days;
