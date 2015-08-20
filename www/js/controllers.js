@@ -18,9 +18,6 @@ appCtrl.controller('DashCtrl', function($scope, DataBase, $ionicPlatform,$ionicH
             $scope.chartBaseline,
             $scope.chartLastWeek 
         ];
-        $scope.onClick = function (points, evt) {
-            console.log(points, evt);
-        };
         function setChartRange(){
             var labels = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11' , '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'];
             var bot = 0;
@@ -81,9 +78,6 @@ appCtrl.controller('DashCtrl', function($scope, DataBase, $ionicPlatform,$ionicH
 
 
         $timeout(tick, $scope.tickInterval);
-
-
-
 
         function setBaseLine(data){
             $scope.chartBaseline = data;
