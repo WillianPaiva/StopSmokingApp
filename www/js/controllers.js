@@ -144,8 +144,6 @@ appCtrl.controller('EcoCtrl', function($scope, $localStorage, DataBase, $ionicHi
         $scope.serie.push(value);
         startup(data);
     }
-    //$scope.labels.push(months[data[x][0]]+'/'+data[x][1]);
-
     $scope.$watch('serie', function(){
         $scope.data = [$scope.serie];
     });
