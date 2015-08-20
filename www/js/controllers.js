@@ -113,7 +113,14 @@ appCtrl.controller('DashCtrl', function($scope, DataBase, $ionicPlatform, $local
     });
 });
 
-appCtrl.controller('EcoCtrl', function($scope, $localStorage, DataBase, $ionicHistory){
+appCtrl.controller('EcoCtrl', function($scope, $localStorage, DataBase){
+    $scope.price = parseFloat($localStorage.get('price')) ;
+    $scope.submitPrice = function(data){
+        $localStorage.set('price', data);
+        DataBase.getMonths(getdata);
+    };
+
+
     $scope.serie = [0];
     $scope.data = [$scope.serie];
     $scope.labels = [];
@@ -149,7 +156,6 @@ appCtrl.controller('EcoCtrl', function($scope, $localStorage, DataBase, $ionicHi
 
 appCtrl.controller('SettingsCtrl', function($window,$scope, $localStorage, $ionicPopup, pouchService, DataBase){
     $scope.timeFrame = parseInt($localStorage.get('timeFrame')) ;
-    $scope.price = parseFloat($localStorage.get('price')) ;
     $scope.learnTime = parseInt($localStorage.get('learnTime')) ;
 
 
@@ -159,9 +165,6 @@ appCtrl.controller('SettingsCtrl', function($window,$scope, $localStorage, $ioni
     };
     $scope.changeTimeFrame = function(data){
         $localStorage.set('timeFrame', data);
-    };
-    $scope.changePrice = function(data){
-        $localStorage.set('price', data);
     };
 
     $scope.wipe = function(){
