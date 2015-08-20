@@ -47,7 +47,6 @@ app.run(function($ionicPlatform, DataBase) {
 
 app.run( function($ionicPlatform, $state, DataBase, initialRun, $localStorage){
     $ionicPlatform.ready( function(){
-            DataBase.byMonthYear();
         var state = "tab.dash";  // whatever, the main page of your app
 
         if (initialRun.isInitialRun()) {
