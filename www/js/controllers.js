@@ -2,8 +2,7 @@ var appCtrl = angular.module('starter.controllers', ['chart.js']);
 
 appCtrl.controller('DashCtrl', function($scope, DataBase, $ionicPlatform, $localStorage, $timeout, cigTime) {
     $ionicPlatform.ready(function(){
-        DataBase.setChartLastWeek('NotLearn', new Date(), setMedian);
-        DataBase.setChart('Learn', setBaseLine);
+        DataBase.setChartLastWeek(new Date(), setMedian);
         $scope.button = {};
         $scope.button.class = "button button-block button-positive";
         $scope.button.tex = 'loading...';
@@ -87,18 +86,17 @@ appCtrl.controller('DashCtrl', function($scope, DataBase, $ionicPlatform, $local
         function setMedian(data){
             $scope.chartLastWeek  = data;
             $scope.data[1] = $scope.chartLastWeek;
+            DataBase.setChart('Learn', setBaseLine);
             //setChartRange();
         }
         function insert() {
             if(cigTime.isLearnFinished($scope.learTime)){
                 DataBase.InsertDate(new Date(), 'NotLearn');
-                DataBase.setChartLastWeek('NotLearn', new Date(), setMedian);
-                DataBase.setChart('Learn', setBaseLine);
+                DataBase.setChartLastWeek(new Date(), setMedian);
                 cigTime.setNextCig(new Date());
             }else{
                 DataBase.InsertDate(new Date(), 'Learn');
-                DataBase.setChart('Learn', setBaseLine);
-                DataBase.setChartLastWeek('NotLearn', new Date(), setMedian);
+                DataBase.setChartLastWeek(new Date(), setMedian);
             }
             $localStorage.set('lastCig', new Date());
         } 
