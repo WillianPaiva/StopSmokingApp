@@ -157,6 +157,15 @@ appCtrl.controller('EcoCtrl', function($scope, $localStorage, DataBase){
 appCtrl.controller('SettingsCtrl', function($scope, $localStorage){
     $scope.timeFrame = parseInt($localStorage.get('timeFrame'));
     $scope.price = parseFloat($localStorage.get('price'));
+    $scope.timeFrame = parseInt($localStorage.get('timeFrame')) || 5;
+    $scope.price = parseFloat($localStorage.get('price')) || 0;
+    $scope.learnTime = parseInt($localStorage.get('learnTime')) || 3;
+
+
+
+    $scope.learnTimeChanged = function(data){
+        $localStorage.set('learnTime', data);
+    };
     $scope.changeTimeFrame = function(data){
         $localStorage.set('timeFrame', data);
     };
