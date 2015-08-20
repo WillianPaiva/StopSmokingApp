@@ -12,7 +12,7 @@ appCtrl.controller('DashCtrl', function($scope, DataBase, $ionicPlatform, $local
         $scope.chartBaseline = [0];
         $scope.chartLastWeek = [0];        
         $scope.labels = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11' , '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'];
-
+        $scope.learnTime = parseInt($localStorage.get('learnTime'));
         $scope.series = ['Base Line', 'Last Week'];
         $scope.data = [
             $scope.chartBaseline,
@@ -42,7 +42,7 @@ appCtrl.controller('DashCtrl', function($scope, DataBase, $ionicPlatform, $local
 
         var tick = function(){
             var str = [];
-            if(cigTime.isLearnFinished(7)){
+            if(cigTime.isLearnFinished($scope.learnTime)){
                 if(cigTime.getNextCig().getTime() > new Date().getTime()){
                     var diff = Math.floor((cigTime.getNextCig().getTime() - new Date().getTime())/1000);
                     var days, hours, minutes, seconds;
@@ -96,7 +96,7 @@ appCtrl.controller('DashCtrl', function($scope, DataBase, $ionicPlatform, $local
             setChartRange();
         }
         function insert() {
-            if(cigTime.isLearnFinished(1)){
+            if(cigTime.isLearnFinished($scope.learTime)){
                 DataBase.InsertDate(new Date(), 'NotLearn');
                 DataBase.setChartLastWeek('NotLearn', new Date(), setMedian);
                 cigTime.setNextCig(new Date());
@@ -155,8 +155,6 @@ appCtrl.controller('EcoCtrl', function($scope, $localStorage, DataBase){
 
 
 appCtrl.controller('SettingsCtrl', function($scope, $localStorage){
-    $scope.timeFrame = parseInt($localStorage.get('timeFrame'));
-    $scope.price = parseFloat($localStorage.get('price'));
     $scope.timeFrame = parseInt($localStorage.get('timeFrame')) || 5;
     $scope.price = parseFloat($localStorage.get('price')) || 0;
     $scope.learnTime = parseInt($localStorage.get('learnTime')) || 3;
