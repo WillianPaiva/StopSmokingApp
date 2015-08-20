@@ -2,7 +2,20 @@
     <ion-content class="padding">
         <canvas id="line" class="chart chart-line" data="data" labels="labels" 
             legend="true" series="series" ></canvas>
-        
+
+        <span class="input-label">
+            Price
+        </span>
+        <div class="item item-input-inset">
+            <label class="item-input-wrapper">
+            <i class="icon ion-social-usd "></i>
+                <input type="number" placeholder="Price" ng-model="price">
+            </label>
+            <button class="button button-small button-balanced" ng-click="submitPrice(price)">
+                Submit
+            </button>
+        </div>
+
     </ion-content>
 </ion-view>
 
