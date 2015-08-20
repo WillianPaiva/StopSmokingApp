@@ -126,8 +126,6 @@ appCtrl.controller('EcoCtrl', function($scope, $localStorage, DataBase, $ionicHi
     $scope.series = ['Expenses'];
     $scope.dat = [[]];
 
-
-
     function getdata(data) {
         $scope.serie = [];
         $scope.labels = [];
@@ -146,19 +144,19 @@ appCtrl.controller('EcoCtrl', function($scope, $localStorage, DataBase, $ionicHi
     }
     $scope.$watch('serie', function(){
         $scope.data = [$scope.serie];
+
     });
     DataBase.getMonths(getdata);
-
     $scope.$on("$ionicView.afterLeave", function () {
         $ionicHistory.clearCache();
     }); 
 });
 
 
-appCtrl.controller('SettingsCtrl', function($scope, $localStorage){
-    $scope.timeFrame = parseInt($localStorage.get('timeFrame')) || 5;
-    $scope.price = parseFloat($localStorage.get('price')) || 0;
-    $scope.learnTime = parseInt($localStorage.get('learnTime')) || 3;
+appCtrl.controller('SettingsCtrl', function($window,$scope, $localStorage, $ionicPopup, pouchService, DataBase){
+    $scope.timeFrame = parseInt($localStorage.get('timeFrame')) ;
+    $scope.price = parseFloat($localStorage.get('price')) ;
+    $scope.learnTime = parseInt($localStorage.get('learnTime')) ;
 
 
 
@@ -171,6 +169,35 @@ appCtrl.controller('SettingsCtrl', function($scope, $localStorage){
     $scope.changePrice = function(data){
         $localStorage.set('price', data);
     };
+
+    $scope.wipe = function(){
+        var confirmPopup = $ionicPopup.confirm({
+            title: 'Data Wipe',
+            template: 'This will Wipe all your data are you sure of that'
+        });
+        confirmPopup.then(function(res){
+            if(res){
+                pouchService.db.destroy().then(function(){
+                    pouchService.db = new PouchDB('AppDatabase',{adapter: 'websql'});
+                    DataBase.byStatus();
+                    DataBase.lastWeek();
+                    DataBase.lastWeekWithHour();
+                    DataBase.byMonthYear();
+                    $window.location.reload();
+                });
+
+                $localStorage.destroy();                         
+
+                $localStorage.set('timeFrame', 10);
+                $localStorage.set('learnTime', 3);
+                $localStorage.set('price', 0.00);
+                $localStorage.set('firstRun', true);
+            }else{
+                console.log('nothing done');
+            }
+        });
+    };
+
 });
 
 appCtrl.controller('introCtrl',['$scope', '$ionicPopup', '$state', function($scope, $ionicPopup, $state) {
