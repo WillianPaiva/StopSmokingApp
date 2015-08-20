@@ -93,10 +93,12 @@ appCtrl.controller('DashCtrl', function($scope, DataBase, $ionicPlatform,$ionicH
             if(cigTime.isLearnFinished($scope.learTime)){
                 DataBase.InsertDate(new Date(), 'NotLearn');
                 DataBase.setChartLastWeek('NotLearn', new Date(), setMedian);
+                DataBase.setChart('Learn', setBaseLine);
                 cigTime.setNextCig(new Date());
             }else{
                 DataBase.InsertDate(new Date(), 'Learn');
                 DataBase.setChart('Learn', setBaseLine);
+                DataBase.setChartLastWeek('NotLearn', new Date(), setMedian);
             }
             $localStorage.set('lastCig', new Date());
         } 
