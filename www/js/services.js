@@ -32,9 +32,12 @@ function PouchService(){
 
 appServ.service('pouchService', PouchService);
 
-
-
 appServ.factory('DataBase', function(pouchService, $q, $localStorage){
+    pouchService.db.compact().then(function(info){
+        console.log(info);
+    }).catch(function(err){
+        console.log(err);
+    });
     return{
         InsertDate: function(date, status){
             var day, month, year, week, hour, minute, weekDay;  

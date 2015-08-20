@@ -1,6 +1,6 @@
 var appCtrl = angular.module('starter.controllers', ['chart.js']);
 
-appCtrl.controller('DashCtrl', function($scope, DataBase, $ionicPlatform,$ionicHistory , $localStorage, $timeout, cigTime) {
+appCtrl.controller('DashCtrl', function($scope, DataBase, $ionicPlatform, $localStorage, $timeout, cigTime) {
     $ionicPlatform.ready(function(){
         DataBase.setChartLastWeek('NotLearn', new Date(), setMedian);
         DataBase.setChart('Learn', setBaseLine);
@@ -87,7 +87,7 @@ appCtrl.controller('DashCtrl', function($scope, DataBase, $ionicPlatform,$ionicH
         function setMedian(data){
             $scope.chartLastWeek  = data;
             $scope.data[1] = $scope.chartLastWeek;
-            setChartRange();
+            //setChartRange();
         }
         function insert() {
             if(cigTime.isLearnFinished($scope.learTime)){
@@ -102,10 +102,6 @@ appCtrl.controller('DashCtrl', function($scope, DataBase, $ionicPlatform,$ionicH
             }
             $localStorage.set('lastCig', new Date());
         } 
-        $scope.$on("$ionicView.afterLeave", function () {
-            $ionicHistory.clearCache();
-        }); 
-
 
         $scope.click = function(){
             if($localStorage.get('firstCig')){
