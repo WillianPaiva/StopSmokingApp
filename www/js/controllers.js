@@ -109,7 +109,6 @@ appCtrl.controller('DashCtrl', function($scope, DataBase, $ionicPlatform, $local
                 insert();
             }
         };
-
     });
 });
 
