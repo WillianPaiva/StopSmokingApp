@@ -1,4 +1,4 @@
-var app = angular.module('starter', ['ionic', 'starter.controllers', 'starter.services',  'ionic.wizard', 'chart.js', 'ionic-material',]);
+var app = angular.module('starter', ['ionic', 'starter.controllers', 'starter.services',  'ionic.wizard', 'chart.js', 'ionic-material','ionic-datepicker']);
 
 app.run(function($ionicPlatform, DataBase) {
     $ionicPlatform.ready(function() {
