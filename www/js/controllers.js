@@ -1,6 +1,6 @@
 var appCtrl = angular.module('starter.controllers', ['chart.js']);
 
-appCtrl.controller('DashCtrl', function($scope, DataBase, $ionicPlatform, $localStorage, $timeout, cigTime) {
+appCtrl.controller('DashCtrl', function($scope, DataBase, $ionicPlatform, $localStorage, $timeout, cigTime, $ionicPopup) {
     $ionicPlatform.ready(function(){
         DataBase.setChartLastWeek(new Date(), setMedian);
         $scope.button = {};
@@ -109,6 +109,42 @@ appCtrl.controller('DashCtrl', function($scope, DataBase, $ionicPlatform, $local
                 insert();
             }
         };
+        /****************
+        *  comparator  *
+        ****************/
+        $scope.dateFrom = '12/12/2015';
+        $scope.dateTo = '12/12/2015';
+        $scope.datepickerObject = {
+            titleLabel: 'Title',  //Optional
+            todayLabel: 'Today',  //Optional
+            closeLabel: 'Close',  //Optional
+            setLabel: 'Set',  //Optional
+            errorMsgLabel : 'Please select time.',    //Optional
+            setButtonType : 'button-assertive',  //Optional
+            inputDate: new Date(),    //Optional
+            mondayFirst: true,    //Optional
+            //disabledDates:disabledDates,  //Optional
+            //monthList:monthList,  //Optional
+            templateType:'popup', //Optional
+            modalHeaderColor:'bar-positive', //Optional
+            modalFooterColor:'bar-positive', //Optional
+            from: new Date(2015, 7, 2),   //Optional
+            to: new Date(2015, 7, 29),    //Optional
+            callback: function (val) {    //Mandatory
+                datePickerCallback(val);
+            }
+        };
+
+        var datePickerCallback = function (val) {
+            if (typeof(val) === 'undefined') {
+                console.log('No date selected');
+            } else {
+                console.log('Selected date is : ', val);
+            }
+        };
+
+
+
     });
 });
 
