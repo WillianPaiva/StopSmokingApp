@@ -6,29 +6,14 @@
             {{button.tex}}
         </button>
 
-        <h3>Enter a range or a date to Plot</h3>
-        <div class="list">
-            <div class="row">
-
-                <div class="col item item-input-inset">
-                    <label class="item-input-wrapper">
-                        From:
-                        <ionic-datepicker input-obj="datepickerObject">
-                            <input type="text" ng-model="dateFrom">
-                        </ionic-datepicker>
-                    </label>
-                </div>
-                <div class="col col-10"></div>
-                <div class="col item item-input-inset">
-                    <label class="item-input-wrapper">
-                        To:
-                        <ionic-datepicker input-obj="datepickerObject">
-                            <input type="text" ng-model="dateTo">
-                        </ionic-datepicker>
-                    </label>
-                </div>
-
-            </div>
+        <div class="item item-input-inset">
+            <label class="item-input-wrapper">
+                <!--<i class="icon ion-social-usd "></i>-->
+                <input type="date" ng-model="DateToInsert">
+            </label>
+            <button class="button button-small button-balanced" ng-click="insertDate(DateToInsert)">
+                Insert
+            </button>
         </div>
 
 
@@ -38,16 +23,11 @@
 
 
 
-        <button class="button button-block button-balanced" ng-click="popupDate()">
-            Insert
-        </button>
 
+        <canvas id="comparator" class="chart chart-line" data="compData" labels="compLabels" 
+            legend="true" series="compSeries" ></canvas>
 
-
-        <canvas id="comparator" class="chart chart-line" data="data" labels="labels" 
-            legend="true" series="series" ></canvas>
-
-        <button class="button button-block button-assertive" ng-click="clearChart()">
+        <button class="button button-block button-assertive" ng-click="clearData()">
             Clear
         </button>
 
