@@ -1,6 +1,7 @@
-var appCtrl = angular.module('starter.controllers', ['chart.js']);
+//$scope.chartHTML = $sce.trustAsHtml('<canvas id="comparator" class="chart chart-line" data="compData" labels="compLabels" legend="true" series="compSeries" ></canvas>');
+var appCtrl = angular.module('starter.controllers', ['chart.js','ngSanitize']);
 
-appCtrl.controller('DashCtrl', function($scope, DataBase, $ionicPlatform, $localStorage, $timeout, cigTime, $ionicPopup) {
+appCtrl.controller('DashCtrl', function($sce, $window, $scope, DataBase, $ionicPlatform, $localStorage, $timeout, cigTime, $ionicPopup) {
     $ionicPlatform.ready(function(){
         DataBase.setChartLastWeek(new Date(), setMedian);
         $scope.button = {};
@@ -112,38 +113,32 @@ appCtrl.controller('DashCtrl', function($scope, DataBase, $ionicPlatform, $local
         /****************
         *  comparator  *
         ****************/
-        $scope.dateFrom = '12/12/2015';
-        $scope.dateTo = '12/12/2015';
-        $scope.datepickerObject = {
-            titleLabel: 'Title',  //Optional
-            todayLabel: 'Today',  //Optional
-            closeLabel: 'Close',  //Optional
-            setLabel: 'Set',  //Optional
-            errorMsgLabel : 'Please select time.',    //Optional
-            setButtonType : 'button-assertive',  //Optional
-            inputDate: new Date(),    //Optional
-            mondayFirst: true,    //Optional
-            //disabledDates:disabledDates,  //Optional
-            //monthList:monthList,  //Optional
-            templateType:'popup', //Optional
-            modalHeaderColor:'bar-positive', //Optional
-            modalFooterColor:'bar-positive', //Optional
-            from: new Date(2015, 7, 2),   //Optional
-            to: new Date(2015, 7, 29),    //Optional
-            callback: function (val) {    //Mandatory
-                datePickerCallback(val);
-            }
+        $scope.compLabels = [''];
+        $scope.compSeries = [''];
+        $scope.compData = [[0]];
+        $scope.DateToInsert = new Date();
+        $scope.insertDate = function(d){
+            DataBase.getAllDay(d,isertDateOnChart);
         };
 
-        var datePickerCallback = function (val) {
-            if (typeof(val) === 'undefined') {
-                console.log('No date selected');
-            } else {
-                console.log('Selected date is : ', val);
+        var test = false;
+        function isertDateOnChart(serie,data){
+            if(!test){
+                $scope.compLabels = [];
+                $scope.compSeries = [];
+                $scope.compData = [];
+                test = true;                
             }
+            $scope.compSeries.push(serie);
+            $scope.compData.push(data);
+            $scope.compLabels = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11' , '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'];
+        }
+        $scope.clearData = function(){
+            $scope.compLabels = [''];
+            $scope.compSeries = [''];
+            $scope.compData = [[0]];
+            test = false;
         };
-
-
 
     });
 });
