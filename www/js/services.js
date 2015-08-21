@@ -144,6 +144,35 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
                 console.log(err);
             });
         },
+        getAllDay: function(date, callback){
+            var temp = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+            var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+            var day, week, year, month;
+            day = date.getDate();
+            week = date.getWeek();
+            year = date.getFullYear();
+            month = date.getMonth();
+            $q.when(pouchService.db.find({
+                selector: {
+                    $and: [
+                        {year: {$eq: year}},
+                        {day: {$eq: day}},
+                        {month: {$eq: month}},
+                    ]
+                },
+            })).then(function(res){
+                return $q.all(res.docs.map(function(doc){
+                    return temp[doc.hour]++;
+                }));
+            }).then(function(data){
+                return temp;
+            }).then(function(data){
+                var labe = day+'/'+months[month]+'/'+year ;
+                return callback(labe,data);
+            }).catch(function(err){
+                console.log(err);
+            });
+        },
         getMedian: function(date, callback){
             var temp2 = [];
             var count = 0;
