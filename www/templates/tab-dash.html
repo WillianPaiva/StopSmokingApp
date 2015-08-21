@@ -5,18 +5,51 @@
         <button class="{{button.class}}" ng-click="click()">
             {{button.tex}}
         </button>
-        <div class="row">
-            <button class="col button button button-balanced" ng-click="pickDate()">
-                pick
-            </button>
-            <div class="col"></div>
-            <button class="col button button button-assertive" ng-click="clearChart()">
-                clear
-            </button>
+
+        <h3>Enter a range or a date to Plot</h3>
+        <div class="list">
+            <div class="row">
+
+                <div class="col item item-input-inset">
+                    <label class="item-input-wrapper">
+                        From:
+                        <ionic-datepicker input-obj="datepickerObject">
+                            <input type="text" ng-model="dateFrom">
+                        </ionic-datepicker>
+                    </label>
+                </div>
+                <div class="col col-10"></div>
+                <div class="col item item-input-inset">
+                    <label class="item-input-wrapper">
+                        To:
+                        <ionic-datepicker input-obj="datepickerObject">
+                            <input type="text" ng-model="dateTo">
+                        </ionic-datepicker>
+                    </label>
+                </div>
+
+            </div>
         </div>
+
+
+
+
+
+
+
+
+        <button class="button button-block button-balanced" ng-click="popupDate()">
+            Insert
+        </button>
+
+
+
         <canvas id="comparator" class="chart chart-line" data="data" labels="labels" 
             legend="true" series="series" ></canvas>
 
+        <button class="button button-block button-assertive" ng-click="clearChart()">
+            Clear
+        </button>
 
 
     </ion-content>
