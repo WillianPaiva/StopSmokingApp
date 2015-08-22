@@ -1,8 +1,38 @@
 //$scope.chartHTML = $sce.trustAsHtml('<canvas id="comparator" class="chart chart-line" data="compData" labels="compLabels" legend="true" series="compSeries" ></canvas>');
-var appCtrl = angular.module('starter.controllers', ['chart.js','ngSanitize']);
+var appCtrl = angular.module('starter.controllers', ['ngSanitize','angular-chartist']);
 
-appCtrl.controller('DashCtrl', function($sce, $window, $scope, DataBase, $ionicPlatform, $localStorage, $timeout, cigTime, $ionicPopup) {
+appCtrl.controller('DashCtrl', function($sce, $window, $scope, DataBase, $ionicPlatform, $localStorage, $timeout, cigTime, $ionicPopup, chart, $rootScope) {
     $ionicPlatform.ready(function(){
+        $scope.type = 'Line';
+        $scope.lineData = {
+            series:[] 
+        };
+        $scope.lineOptions = chart.options(); 
+
+        $scope.ResponsiveOptions = chart.ResponsiveOptions(); 
+
+        function pushData(data){
+            console.log(data);
+            $scope.lineData.series.push(data);
+        }
+        $scope.event = {
+            draw: function eventHandler(data) {
+                if(data.type === 'line' || data.type === 'area') {
+                    data.element.animate({
+                        d: {
+                            begin: 2000 * data.index,
+                            dur: 2000,
+                            from: data.path.clone().scale(1, 0).translate(0, data.chartRect.height()).stringify(),
+                            to: data.path.clone().stringify(),
+                            easing: Chartist.Svg.Easing.easeOutQuint
+                        }
+                    });
+                }
+
+            }
+
+        };
+
         DataBase.setChartLastWeek(new Date(), setMedian);
         $scope.button = {};
         $scope.button.class = "button button-block button-positive";
@@ -11,31 +41,7 @@ appCtrl.controller('DashCtrl', function($sce, $window, $scope, DataBase, $ionicP
         $scope.tickInterval = 1000;
         $scope.chartBaseline = [0];
         $scope.chartLastWeek = [0];        
-        $scope.labels = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11' , '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'];
         $scope.learnTime = parseInt($localStorage.get('learnTime'));
-        $scope.series = ['Base Line', 'Last Week'];
-        $scope.data = [
-            $scope.chartBaseline,
-            $scope.chartLastWeek 
-        ];
-        function setChartRange(){
-            var labels = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11' , '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'];
-            var bot = 0;
-            for(var x = 0; x < 24 ; x++){
-                if($scope.chartBaseline[x] === 0 && $scope.chartLastWeek[x] === 0){
-                    bot++;
-                }else{break;}
-            }
-            labels.splice(0,bot);
-            $scope.chartBaseline.splice(0,bot);
-            $scope.chartLastWeek.splice(0,bot);
-            $scope.labels = labels   ;
-            $scope.data = [
-                $scope.chartBaseline,
-                $scope.chartLastWeek 
-            ];
-
-        }
 
         var tick = function(){
             var str = [];
@@ -80,15 +86,12 @@ appCtrl.controller('DashCtrl', function($sce, $window, $scope, DataBase, $ionicP
         $timeout(tick, $scope.tickInterval);
 
         function setBaseLine(data){
-            $scope.chartBaseline = data;
-            $scope.data[0] = $scope.chartBaseline;
-            setChartRange();
+            chart.data('Base Line', data,pushData);
         }
         function setMedian(data){
-            $scope.chartLastWeek  = data;
-            $scope.data[1] = $scope.chartLastWeek;
+            $scope.lineData.series = [] ;
+            chart.data('Last Week', data,pushData);
             DataBase.setChart('Learn', setBaseLine);
-            //setChartRange();
         }
         function insert() {
             if(cigTime.isLearnFinished($scope.learTime)){
@@ -113,33 +116,28 @@ appCtrl.controller('DashCtrl', function($sce, $window, $scope, DataBase, $ionicP
         /****************
         *  comparator  *
         ****************/
-        $scope.compLabels = [''];
-        $scope.compSeries = [''];
-        $scope.compData = [[0]];
-        $scope.DateToInsert = new Date();
+        $scope.lineDataComp = {
+            series:[] 
+        };
+        $scope.DateToInsert = new Date();    
         $scope.insertDate = function(d){
             DataBase.getAllDay(d,isertDateOnChart);
         };
-
         var test = false;
         function isertDateOnChart(serie,data){
-            if(!test){
-                $scope.compLabels = [];
-                $scope.compSeries = [];
-                $scope.compData = [];
-                test = true;                
-            }
-            $scope.compSeries.push(serie);
-            $scope.compData.push(data);
-            $scope.compLabels = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11' , '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'];
+            chart.data(serie, data, insertSerie);
         }
-        $scope.clearData = function(){
-            $scope.compLabels = [''];
-            $scope.compSeries = [''];
-            $scope.compData = [[0]];
-            test = false;
-        };
 
+        function insertSerie(data){
+            $scope.lineDataComp.series.push(data);
+        }
+
+        $scope.clearData = function(){
+            $scope.lineDataComp = {
+                series:[]
+            };
+
+        };
     });
 });
 
