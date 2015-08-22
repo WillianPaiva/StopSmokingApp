@@ -1,7 +1,39 @@
 <ion-view view-title="Dashboard">
     <ion-content class="padding">
-        <canvas id="oververview" class="chart chart-line" data="data" labels="labels" 
-            legend="true" series="series" ></canvas>
+
+
+
+
+
+        <style>
+            .ct-chart .ct-series.ct-series-a .ct-area { fill: red; }
+            .ct-chart .ct-series.ct-series-a .ct-line { stroke: red; stroke-width: 3px; }
+            .ct-chart .ct-series.ct-series-b .ct-area { fill: blue; }
+            .ct-chart .ct-series.ct-series-b .ct-line { stroke: blue; stroke-width: 3px; }
+            .ct-chart .ct-series.ct-series-c .ct-area { fill: green; }
+            .ct-chart .ct-series.ct-series-c .ct-line { stroke: green; stroke-width: 3px; }
+            .ct-chart .ct-series.ct-series-d .ct-area { fill: purple; }
+            .ct-chart .ct-series.ct-series-d .ct-line { stroke: purple; stroke-width: 3px; }
+            .ct-chart .ct-series.ct-series-e .ct-area { fill: yellow; }
+            .ct-chart .ct-series.ct-series-e .ct-line { stroke: yellow; stroke-width: 3px; }
+            .ct-chart .ct-series.ct-series-f .ct-area { fill: black; }
+            .ct-chart .ct-series.ct-series-f .ct-line { stroke: black; stroke-width: 3px; }
+            .ct-chart .ct-series.ct-series-g .ct-area { fill: pink; }
+            .ct-chart .ct-series.ct-series-g .ct-line { stroke: pink; stroke-width: 3px; }
+            .ct-chart .ct-series.ct-series-h .ct-area { fill: cyan; }
+            .ct-chart .ct-series.ct-series-h .ct-line { stroke: cyan; stroke-width: 3px; }
+        </style>        
+
+
+
+
+
+        <!--<canvas id="oververview" class="chart chart-line" data="data" labels="labels" -->
+            <!--legend="true" series="series" ></canvas>-->
+
+        <!--<div chart id="chart1"  chart-data="lineData" chart-type="type" chart-options="lineOptions" chart-responsive-options="ResponsiveOptions"></div>-->
+        <div chartist class="ct-chart" chartist-events="event" chartist-data="lineData" chartist-chart-type="Line" chartist-chart-options="lineOptions" chartist-responsive-options="ResponsiveOptions">
+        </div>
         <button class="{{button.class}}" ng-click="click()">
             {{button.tex}}
         </button>
@@ -22,10 +54,9 @@
 
 
 
-
-
-        <canvas id="comparator" class="chart chart-line" data="compData" labels="compLabels" 
-            legend="true" series="compSeries" ></canvas>
+        <!--<canvas id="comparator" class="chart chart-line" data="compData" labels="compLabels" -->
+            <!--legend="true" series="compSeries" ></canvas>-->
+        <div chartist class="ct-chart"chartist-events="event" chartist-data="lineDataComp" chartist-chart-type="Line" chartist-chart-options="lineOptions" chartist-responsive-options="ResponsiveOptions" ></div>
 
         <button class="button button-block button-assertive" ng-click="clearData()">
             Clear
