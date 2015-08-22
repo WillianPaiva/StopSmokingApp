@@ -8,6 +8,8 @@
     "pouchdb": "~4.0.0",
     "ionic-material": "~0.4.2",
     "robotodraft": "~1.1.0",
-    "ionic-datepicker": "~0.8.0"
+    "ionic-datepicker": "~0.8.0",
+    "chartist": "~0.9.4",
+    "angular-chartist.js": "~3.3.6"
   }
 }
