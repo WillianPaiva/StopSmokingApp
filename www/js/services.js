@@ -23,7 +23,58 @@ appServ.factory('$localStorage', ['$window', function($window){
 
     };
 }]);
+appServ.factory('chart', function(){
+    return{
+        options: function(){
+            var options = {
+                axisX: {
+                    type: Chartist.AutoScaleAxis,
+                    //ticks: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11' , '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'],
+                    //stretch: true,
+                    high: 23,
+                    low: 0,
+                    onlyInteger: true,
+                },
+                axisY: {
+                    scaleMinSpace: 15,
+                },
+                chartPadding: {
+                    top: 15,
+                    right: 0,
+                    bottom: 0,
+                    left: 0
+                },
+                low: 0,
+                showArea: true,
+                showPoint: false,
+                fullWidth: true,
+            };
+            return options;
+        },
+        ResponsiveOptions: function(){
+            var ResponsiveOptions = [
+                ['screen and (min-width: 641px) and (max-width: 1024px)', {
+                    axisX: {
+                    },
+                }],
+                ['screen and (max-width: 640px)', {
+                    axisX: {
+                    }
+                }]
+            ];
+            return ResponsiveOptions;        
 
+        },
+        data: function(meta,data,callback){
+            var d = [];
+            for(var x = 0; x < 24; x++){
+                d.push({name: meta, x: x, y: data[x]});
+            }
+            return callback(d);
+        }
+    };
+
+});
 
 function PouchService(){
     this.db = new PouchDB('AppDatabase',{adapter: 'websql'});
@@ -219,7 +270,7 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
                 selector: {
                     year: {$exists: true},
                     month: {$exists: true}
-                 },
+                },
                 sort: ['year','month']
             })).then(function(res){
                 return $q.all(res.docs.map(function(doc){
