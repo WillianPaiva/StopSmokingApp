@@ -141,14 +141,18 @@ app.config(function($stateProvider, $urlRouterProvider) {
 });
 
 
-app.config(['ChartJsProvider', function (ChartJsProvider) {
-    // Configure all charts
-    ChartJsProvider.setOptions({
-        colours: ['#FF3300', '#3399FF'],
-        responsive: true
-    });
-    // Configure all line charts
-    ChartJsProvider.setOptions('Line', {
-        datasetFill: true
-    });
-}]);
+//app.config(['ChartJsProvider', function (ChartJsProvider) {
+    //// Configure all charts
+    //ChartJsProvider.setOptions({
+        //colours: ['#FF3300', '#3399FF'],
+        //responsive: true,
+        //animation : false,
+        ////animationSteps: 10,
+        ////animationEasing: "linear",
+        ////showTooltips: false,
+    //});
+    //// Configure all line charts
+    //ChartJsProvider.setOptions('Line', {
+        //datasetFill: true
+    //});
+//}]);
