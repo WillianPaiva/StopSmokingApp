@@ -7,13 +7,15 @@ appCtrl.controller('DashCtrl', function($sce, $window, $scope, DataBase, $ionicP
         $scope.lineData = {
             series:[] 
         };
-        $scope.lineOptions = chart.options(); 
+        $scope.heightMainChart = $scope.lineData.series.length ;
+        $scope.lineOptions = chart.options($scope.heightMainChart); 
 
         $scope.ResponsiveOptions = chart.ResponsiveOptions(); 
 
         function pushData(data){
-            console.log(data);
             $scope.lineData.series.push(data);
+            $scope.heightMainChart = $scope.lineData.series.length ;
+            $scope.lineOptions = chart.options($scope.heightMainChart); 
         }
         $scope.event = {
             draw: function eventHandler(data) {
