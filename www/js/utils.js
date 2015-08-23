@@ -5,7 +5,7 @@ Date.prototype.getWeek = function() {
 
 
 Date.prototype.addDays = function(days) {
-    this.setDate(this.getDate() + parseInt(days , 10));
+    this.setDate(this.getDate() + parseInt(days));
     return this;
 };
 

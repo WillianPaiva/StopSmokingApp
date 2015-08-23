@@ -43,11 +43,9 @@ appCtrl.controller('DashCtrl', function($sce, $window, $scope, DataBase, $ionicP
         $scope.tickInterval = 1000;
         $scope.chartBaseline = [0];
         $scope.chartLastWeek = [0];        
-        $scope.learnTime = parseInt($localStorage.get('learnTime'));
 
         var tick = function(){
-            var str = [];
-            if(cigTime.isLearnFinished($scope.learnTime)){
+            if(cigTime.isLearnFinished($localStorage.get('learnTime'))){
                 if(cigTime.getNextCig().getTime() > new Date().getTime()){
                     var diff = Math.floor((cigTime.getNextCig().getTime() - new Date().getTime())/1000);
                     var days, hours, minutes, seconds;
@@ -96,7 +94,7 @@ appCtrl.controller('DashCtrl', function($sce, $window, $scope, DataBase, $ionicP
             DataBase.setChart('Learn', setBaseLine);
         }
         function insert() {
-            if(cigTime.isLearnFinished($scope.learTime)){
+            if(cigTime.isLearnFinished($localStorage.get('learnTime'))){
                 DataBase.InsertDate(new Date(), 'NotLearn');
                 DataBase.setChartLastWeek(new Date(), setMedian);
                 cigTime.setNextCig(new Date());
