@@ -121,23 +121,29 @@ appCtrl.controller('DashCtrl', function($sce, $window, $scope, DataBase, $ionicP
         $scope.lineDataComp = {
             series:[] 
         };
+        $scope.heightCompChart = $scope.lineDataComp.series.length ;
         $scope.DateToInsert = new Date();    
         $scope.insertDate = function(d){
             DataBase.getAllDay(d,isertDateOnChart);
         };
         var test = false;
+        $scope.lineCompOptions = chart.options($scope.heightCompChart); 
         function isertDateOnChart(serie,data){
             chart.data(serie, data, insertSerie);
         }
 
         function insertSerie(data){
             $scope.lineDataComp.series.push(data);
+            $scope.heightCompChart = $scope.lineDataComp.series.length ;
+            $scope.lineCompOptions = chart.options($scope.heightCompChart); 
         }
 
         $scope.clearData = function(){
             $scope.lineDataComp = {
                 series:[]
             };
+            $scope.heightCompChart = $scope.lineDataComp.series.length ;
+            $scope.lineCompOptions = chart.options($scope.heightCompChart); 
 
         };
     });
