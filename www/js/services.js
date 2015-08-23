@@ -25,8 +25,14 @@ appServ.factory('$localStorage', ['$window', function($window){
 }]);
 appServ.factory('chart', function(){
     return{
-        options: function(){
+        options: function(multiplier){
+            if(Math.abs(multiplier)% 2 == 1){
+                multiplier++;
+            }
+            var height = 150 + ((multiplier/2) * 15);
+            var offset = height - 130;
             var options = {
+                height: height+'px',
                 axisX: {
                     type: Chartist.AutoScaleAxis,
                     //ticks: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11' , '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'],
@@ -34,6 +40,7 @@ appServ.factory('chart', function(){
                     high: 23,
                     low: 0,
                     onlyInteger: true,
+                    offset: offset,
                 },
                 axisY: {
                     scaleMinSpace: 15,
@@ -48,6 +55,9 @@ appServ.factory('chart', function(){
                 showArea: true,
                 showPoint: false,
                 fullWidth: true,
+                plugins:[
+                    legendPlugin({t: 'midle'})
+                ]
             };
             return options;
         },
