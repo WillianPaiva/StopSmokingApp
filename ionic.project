@@ -1,4 +1,5 @@
 {
-  "name": "StopSmokingApp",
-  "app_id": ""
+    "name": "StopSmokingApp",
+        "app_id": "",
+        "gulpStartupTasks": ["sass", "watch"]
 }
