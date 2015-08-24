@@ -13,11 +13,24 @@ $energized:                       #ffc900 !default;
 $assertive:                       #ef473a !default;
 $royal:                           #886aea !default;
 $dark:                            #444 !default;
-*/
+ */
 
 // The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../lib/ionic/fonts" !default;
 
 // Include all of Ionic
 @import "www/lib/ionic/scss/ionic";
+@import "www/lib/chartist/dist/scss/chartist.scss";
+
+
+$ct-class-legend: ct-legend !default;
+
+@for $i from 0 to length($ct-series-names) {
+    ##{$ct-class-legend}-#{nth($ct-series-names, $i + 1)} {
+        $color: nth($ct-series-colors, $i + 1);
+        fill:$color
+
+  }
+    
+}
 
