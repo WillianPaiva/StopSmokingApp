@@ -33,8 +33,9 @@ function legendPlugin(options){
                             "cx": xp -10,
                             "cy": yp-6,
                             "r":"6",
-                            "stroke":colors[x],
-                            "fill" : colors[x]
+                            "id":'ct-legend-'+alphabet[x],
+                            //"stroke":colors[x],
+                            //"fill" : colors[x]
                         });
                     }else{
                         xp = xPos;
@@ -48,12 +49,13 @@ function legendPlugin(options){
                             "cx": xp -10,
                             "cy": yp -6,
                             "r":"6",
-                            "stroke":colors[x],
-                            "fill" : colors[x]
+                            "id":'ct-legend-'+alphabet[x],
+                            //"stroke":colors[x],
+                            //"fill" : colors[x]
                         });
                     }
-                    data.svg.append(text, false) ;
-                    data.svg.append(circle, false) ;
+                    data.svg.append(text, true) ;
+                    data.svg.append(circle, true) ;
                 }
             }
 
