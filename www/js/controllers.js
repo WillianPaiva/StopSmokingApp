@@ -3,6 +3,18 @@ var appCtrl = angular.module('starter.controllers', ['ngSanitize','angular-chart
 
 appCtrl.controller('DashCtrl', function($sce, $window, $scope, DataBase, $ionicPlatform, $localStorage, $timeout, cigTime, $ionicPopup, chart, $rootScope) {
     $ionicPlatform.ready(function(){
+        /********************
+        *  load chart data *
+        *******************/
+
+        DataBase.setChartLastWeek(new Date(), setMedian);
+
+
+
+        /**************************
+        *  chart configuration   *
+        **************************/
+
         $scope.type = 'Line';
         $scope.lineData = {
             series:[] 
@@ -35,7 +47,15 @@ appCtrl.controller('DashCtrl', function($sce, $window, $scope, DataBase, $ionicP
 
         };
 
-        DataBase.setChartLastWeek(new Date(), setMedian);
+
+
+
+
+
+        /***********************************************
+        *  main insert cig button config and timers   *
+        ***********************************************/
+
         $scope.button = {};
         $scope.button.class = "button button-block button-positive";
         $scope.button.tex = 'loading...';
@@ -85,6 +105,15 @@ appCtrl.controller('DashCtrl', function($sce, $window, $scope, DataBase, $ionicP
 
         $timeout(tick, $scope.tickInterval);
 
+
+
+
+
+
+        /***********************************************
+        *  callback functions to load the chart data  *
+        ***********************************************/
+
         function setBaseLine(data){
             chart.data('Base Line', data,pushData);
         }
@@ -93,6 +122,10 @@ appCtrl.controller('DashCtrl', function($sce, $window, $scope, DataBase, $ionicP
             chart.data('Last Week', data,pushData);
             DataBase.setChart('Learn', setBaseLine);
         }
+        /****************************************
+        *  function to insert data on the db   *
+        ****************************************/
+
         function insert() {
             if(cigTime.isLearnFinished($localStorage.get('learnTime'))){
                 DataBase.InsertDate(new Date(), 'NotLearn');
@@ -113,10 +146,17 @@ appCtrl.controller('DashCtrl', function($sce, $window, $scope, DataBase, $ionicP
                 insert();
             }
         };
+
+
+
         /****************
         *  comparator  *
         ****************/
+
         $scope.toogleCompChart = false;
+        /****************************
+        *  comparator date picker  *
+        ****************************/
         $scope.datepickerObject = {
             titleLabel: 'Select a Day to plot',  //Optional
             todayLabel: 'Today',  //Optional
@@ -138,6 +178,10 @@ appCtrl.controller('DashCtrl', function($sce, $window, $scope, DataBase, $ionicP
                 $scope.insertDate(val);
             }
         };
+        /**************************************************
+        *  chart configuration for the comparator chart  *
+        **************************************************/
+
         $scope.lineDataComp = {
             series:[] 
         };
@@ -153,15 +197,28 @@ appCtrl.controller('DashCtrl', function($sce, $window, $scope, DataBase, $ionicP
         };
         var test = false;
         $scope.lineCompOptions = chart.options($scope.heightCompChart); 
+
+
+        /*******************************************
+        *  callback functions to load chart data  *
+        *******************************************/
+
         function isertDateOnChart(serie,data){
             chart.data(serie, data, insertSerie);
         }
+
+        /****************************************************
+        *  funtion to insert a date an lunch the db query  *
+        ****************************************************/
 
         function insertSerie(data){
             $scope.lineDataComp.series.push(data);
             $scope.heightCompChart = $scope.lineDataComp.series.length ;
             $scope.lineCompOptions = chart.options($scope.heightCompChart); 
         }
+        /********************************
+        *  clear the comparator chart  *
+        ********************************/
          $scope.removeItem = function(index){
             console.log(index);
             $scope.lineDataComp.series.splice(index,1);
