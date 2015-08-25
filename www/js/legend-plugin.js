@@ -1,6 +1,5 @@
 function legendPlugin(options){
     return function legendPlugin(chart){
-        var colors = ['red', 'blue', 'green', 'purple', 'yellow', 'black', 'pink', 'cyan'];
 
         var alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
 

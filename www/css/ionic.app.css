@@ -4,6 +4,7 @@ To customize the look and feel of Ionic, you can override the variables
 in ionic's _variables.scss file.
 
 For example, you might change some of the default colors:
+For example, you might change some of the default colors:
 
 $light:                           #fff !default;
 $stable:                          #f8f8f8 !default;
@@ -12,9 +13,37 @@ $calm:                            #11c1f3 !default;
 $balanced:                        #33cd5f !default;
 $energized:                       #ffc900 !default;
 $assertive:                       #ef473a !default;
-$royal:                           #886aea !default;
 $dark:                            #444 !default;
- */
+*/
+/*$royal:                           #546E7A !default;*/
+/*$font-family-sans-serif:          "Helvetica Neue", "Roboto", "Segoe UI", sans-serif !default;*/
+/*$font-family-light-sans-serif:    "HelveticaNeue-Light", "Roboto-Light", "Segoe UI-Light", sans-serif-light !default;*/
+/*$font-family-serif:               serif !default;*/
+/*$font-family-monospace:           monospace !default;*/
+/*$font-family-base:                $font-family-sans-serif !default;*/
+/*$font-size-base:                  14px !default;*/
+/*$font-size-large:                 18px !default;*/
+/*$font-size-small:                 11px !default;*/
+/*$line-height-base:                1.428571429 !default; // 20/14*/
+/*$line-height-computed:            floor($font-size-base * $line-height-base) !default; // ~20px*/
+/*$line-height-large:               1.33 !default;*/
+/*$line-height-small:               1.5 !default;*/
+/*$headings-font-family:            $font-family-base !default;*/
+/*$headings-font-weight:            500 !default;*/
+/*$headings-line-height:            1.2 !default;*/
+/*$base-color:                      #000 !default;*/
+/*$link-color:                      $positive !default;*/
+/*$link-hover-color:                darken($link-color, 15%) !default;*/
+/*$content-padding:                 10px !default;*/
+/*$padding-base-vertical:           6px !default;*/
+/*$padding-base-horizontal:         12px !default;*/
+/*$padding-large-vertical:          10px !default;*/
+/*$padding-large-horizontal:        16px !default;*/
+/*$padding-small-vertical:          5px !default;*/
+/*$padding-small-horizontal:        10px !default;*/
+/*$border-radius-base:              4px !default;*/
+/*$border-radius-large:             6px !default;*/
+/*$border-radius-small:             3px !default;*/
 /*!
   Ionicons, v2.0.1
   Created by Ben Sperry for the Ionic Framework, http://ionicons.com/
@@ -7693,6 +7722,20 @@ a.button {
   -webkit-transition-duration: 0s;
   transition-duration: 0s; }
 
+/*.item*/
+/*{*/
+/*border: 0px;*/
+/*[>background-color: #607D8B;<]*/
+/*[>box-shadow: 10px 10px 30px 1px rgba(0,0,0,0.75);<]*/
+/*}*/
+/*.item-input-wrapper*/
+/*{*/
+/*box-shadow: $shadow;*/
+/*}*/
+/*button.button*/
+/*{*/
+/*box-shadow: $shadow;*/
+/*}*/
 .ct-label {
   fill: rgba(0, 0, 0, 0.4);
   color: rgba(0, 0, 0, 0.4);
@@ -7853,34 +7896,34 @@ a.button {
   stroke-width: 60px; }
 
 .ct-series-a .ct-point, .ct-series-a .ct-line, .ct-series-a .ct-bar, .ct-series-a .ct-slice-donut {
-  stroke: #d70206; }
+  stroke: #E53935; }
 .ct-series-a .ct-slice-pie, .ct-series-a .ct-area {
-  fill: #d70206; }
+  fill: #E53935; }
 
 .ct-series-b .ct-point, .ct-series-b .ct-line, .ct-series-b .ct-bar, .ct-series-b .ct-slice-donut {
-  stroke: #f05b4f; }
+  stroke: #3949AB; }
 .ct-series-b .ct-slice-pie, .ct-series-b .ct-area {
-  fill: #f05b4f; }
+  fill: #3949AB; }
 
 .ct-series-c .ct-point, .ct-series-c .ct-line, .ct-series-c .ct-bar, .ct-series-c .ct-slice-donut {
-  stroke: #f4c63d; }
+  stroke: #43A047; }
 .ct-series-c .ct-slice-pie, .ct-series-c .ct-area {
-  fill: #f4c63d; }
+  fill: #43A047; }
 
 .ct-series-d .ct-point, .ct-series-d .ct-line, .ct-series-d .ct-bar, .ct-series-d .ct-slice-donut {
-  stroke: #d17905; }
+  stroke: #D81B60; }
 .ct-series-d .ct-slice-pie, .ct-series-d .ct-area {
-  fill: #d17905; }
+  fill: #D81B60; }
 
 .ct-series-e .ct-point, .ct-series-e .ct-line, .ct-series-e .ct-bar, .ct-series-e .ct-slice-donut {
-  stroke: #453d3f; }
+  stroke: #FDD835; }
 .ct-series-e .ct-slice-pie, .ct-series-e .ct-area {
-  fill: #453d3f; }
+  fill: #FDD835; }
 
 .ct-series-f .ct-point, .ct-series-f .ct-line, .ct-series-f .ct-bar, .ct-series-f .ct-slice-donut {
-  stroke: #59922b; }
+  stroke: #8E24AA; }
 .ct-series-f .ct-slice-pie, .ct-series-f .ct-area {
-  fill: #59922b; }
+  fill: #8E24AA; }
 
 .ct-series-g .ct-point, .ct-series-g .ct-line, .ct-series-g .ct-bar, .ct-series-g .ct-slice-donut {
   stroke: #0544d3; }
@@ -8285,22 +8328,22 @@ a.button {
     left: 0; }
 
 #ct-legend-a {
-  fill: #d70206; }
+  fill: #E53935; }
 
 #ct-legend-b {
-  fill: #f05b4f; }
+  fill: #3949AB; }
 
 #ct-legend-c {
-  fill: #f4c63d; }
+  fill: #43A047; }
 
 #ct-legend-d {
-  fill: #d17905; }
+  fill: #D81B60; }
 
 #ct-legend-e {
-  fill: #453d3f; }
+  fill: #FDD835; }
 
 #ct-legend-f {
-  fill: #59922b; }
+  fill: #8E24AA; }
 
 #ct-legend-g {
   fill: #0544d3; }
