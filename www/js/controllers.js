@@ -171,6 +171,34 @@ appCtrl.controller('DashCtrl', function($sce, $window, $scope, DataBase, $ionicP
             $scope.lineCompOptions = chart.options($scope.heightCompChart); 
 
         };
+        $scope.removePopup = function(){
+            var remPopup = $ionicPopup.show({
+                templateUrl: 'templates/removeDatePopUp.html',
+                title: 'remove date',
+                scope: $scope,
+                buttons:[
+                    {
+                        text: 'Remove All',
+                        type: 'button-assertive',
+                        onTap: function(){
+                            $scope.lineDataComp = {
+                                series:[]
+                            };
+                            $scope.heightCompChart = $scope.lineDataComp.series.length ;
+                            $scope.lineCompOptions = chart.options($scope.heightCompChart); 
+                            $scope.toogleCompChart = false;
+                        }
+                    },
+                    {
+                        text: 'Finish',
+                        type: 'button-positive',
+                    },
+
+                ],
+
+
+            });
+        }        ;
     });
 });
 
