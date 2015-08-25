@@ -366,6 +366,24 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
                 console.log(err);
             });
         },
+        allData: function(){
+            pouchService.db.createIndex({
+                index: {fields: ['month', 'day', 'hour', 'year', 'week']}
+            }).then(function(result){
+                console.log(result);
+            }).catch(function(err){
+                console.log(err);
+            });
+        },
+        allData2: function(){
+            pouchService.db.createIndex({
+                index: {fields: ['year', 'month', 'day', 'hour', 'status']}
+            }).then(function(result){
+                console.log(result);
+            }).catch(function(err){
+                console.log(err);
+            });
+        },
         byMonthYear: function(){
             pouchService.db.createIndex({
                 index: {fields: ['year', 'month']}
