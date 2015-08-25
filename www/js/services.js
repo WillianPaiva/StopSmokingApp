@@ -168,6 +168,7 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
         setChartLastWeek: function(date, callback){
             var temp = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
             var temp2 = [];
+            var time = {};
             var day1, day2, week1, week2, year1, year2;
             day1 = date.getDate();
             week1 = date.getWeek();
@@ -185,18 +186,22 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
                         {day: {$gte: day2}},
                         {week: {$lte: week1}},
                         {week: {$gte: week2}},
+                        {hour: {$exists: true}},
+                        {month: {$exists: true}},
                     ]
                 },
+                sort: ['month', 'day', 'hour']
             })).then(function(res){
+                time.f=res.docs[0].hour;
                 return $q.all(res.docs.map(function(doc){
+                    time.l = doc.hour   ;
                     temp2.push(doc.day);
                     return temp[doc.hour]++;
                 }));
             }).then(function(data){
                 temp2 = temp2.unique();
-                var h = new Date().getHours();
                 for(var i = 0; i < 24; i++){
-                    if(i <= h){
+                    if(i > time.f && i < time.l){
                         if(temp2.length > 0){
                             temp[i] = (temp[i]/temp2.length);
                         }
