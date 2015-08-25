@@ -116,13 +116,40 @@ appCtrl.controller('DashCtrl', function($sce, $window, $scope, DataBase, $ionicP
         /****************
         *  comparator  *
         ****************/
+        $scope.toogleCompChart = false;
+        $scope.datepickerObject = {
+            titleLabel: 'Select a Day to plot',  //Optional
+            todayLabel: 'Today',  //Optional
+            closeLabel: 'Close',  //Optional
+            setLabel: 'Set',  //Optional
+            errorMsgLabel : 'Please select time.',    //Optional
+            setButtonType : 'button-assertive',  //Optional
+            inputDate: new Date(),    //Optional
+            mondayFirst: true,    //Optional
+            //disabledDates: disabledDates, //Optional
+            //weekDaysList: weekDaysList,   //Optional
+            //monthList: monthList, //Optional
+            templateType: 'popup', //Optional
+            modalHeaderColor: 'bar-positive', //Optional
+            modalFooterColor: 'bar-positive', //Optional
+            from: new Date($localStorage.get('firstCig')),   //Optional
+            to: new Date(),    //Optional
+            callback: function (val) {    //Mandatory
+                $scope.insertDate(val);
+            }
+        };
         $scope.lineDataComp = {
             series:[] 
         };
         $scope.heightCompChart = $scope.lineDataComp.series.length ;
         $scope.DateToInsert = new Date();    
         $scope.insertDate = function(d){
-            DataBase.getAllDay(d,isertDateOnChart);
+            if (typeof(d) === 'undefined') {
+                console.log('No date selected');
+            } else {
+                $scope.toogleCompChart = true;
+                DataBase.getAllDay(d,isertDateOnChart);
+            }
         };
         var test = false;
         $scope.lineCompOptions = chart.options($scope.heightCompChart); 
