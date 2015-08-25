@@ -1,0 +1,6 @@
+<ion-list>
+    <a class="item item-icon-right" ng-repeat="item in lineDataComp.series" ng-animate="'animate'">
+        {{item[0].name}}
+        <i class="button button-icon icon ion-ios-trash" ng-click="removeItem($index)" ></i>
+    </a>
+</ion-list>
