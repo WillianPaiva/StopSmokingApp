@@ -162,6 +162,17 @@ appCtrl.controller('DashCtrl', function($sce, $window, $scope, DataBase, $ionicP
             $scope.heightCompChart = $scope.lineDataComp.series.length ;
             $scope.lineCompOptions = chart.options($scope.heightCompChart); 
         }
+         $scope.removeItem = function(index){
+            console.log(index);
+            $scope.lineDataComp.series.splice(index,1);
+            $scope.heightCompChart = $scope.lineDataComp.series.length ;
+            $scope.lineCompOptions = chart.options($scope.heightCompChart); 
+            if($scope.lineDataComp.series.length === 0){
+                $scope.toogleCompChart = false;
+            }
+            
+
+         };
 
         $scope.clearData = function(){
             $scope.lineDataComp = {
