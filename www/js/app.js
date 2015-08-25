@@ -1,6 +1,6 @@
 var appVersion = "0.1.0";
 
-var app = angular.module('starter', ['ionic', 'starter.directives', 'starter.controllers', 'starter.services',  'ionic.wizard']);
+var app = angular.module('starter', ['ionic', 'starter.directives', 'starter.controllers', 'starter.services',  'ionic.wizard', 'ng-mfb', 'ionic-datepicker', 'ngAnimate']);
 
 app.run(function($ionicPlatform, DataBase) {
     $ionicPlatform.ready(function() {
