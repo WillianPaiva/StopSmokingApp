@@ -13,22 +13,10 @@ $balanced:                        #33cd5f !default;
 $energized:                       #ffc900 !default;
 $assertive:                       #ef473a !default;
 $dark:                            #444 !default;
-*/
+$royal:                           #886aea !default;
+ */
 // Colors
 // -------------------------------
-$bgcolor:                         #78909C !default;
-$bgitemcolor:                     #37474F !default;
-$light:                           #fff !default;
-$stable:                          #f8f8f8 !default;
-$positive:                        #387ef5 !default;
-$calm:                            #11c1f3 !default;
-$balanced:                        #33cd5f !default;
-$energized:                       #ffc900 !default;
-$assertive:                       #ef473a !default;
-/*$royal:                           #546E7A !default;*/
-$royal:                           #886aea !default;
-$dark:                            #444 !default;
-$shadow:                          2px 2px 5px 0px #000 !default;
 
 // Base
 // -------------------------------
@@ -73,28 +61,144 @@ $base-background-color:             #fff !default;
 /*$border-radius-large:             6px !default;*/
 /*$border-radius-small:             3px !default;*/
 
+$bgcolor:                         #78909C !default;
+$bgitemcolor:                     #37474F !default;
+$light:                           #fff !default;
+$stable:                          #f8f8f8 !default;
+$positive:                        #387ef5 !default;
+$calm:                            #11c1f3 !default;
+$balanced:                        #33cd5f !default;
+$energized:                       #ffc900 !default;
+$assertive:                       #ef473a !default;
+$royal:                           #886aea !default;
+$dark:                            #444 !default;
+$shadow:                          2px 2px 5px 0px #000 !default;
+
+
+
 // The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../lib/ionic/fonts" !default;
 
 // Include all of Ionic
 @import "www/lib/ionic/scss/ionic";
 
-/*.item*/
-/*{*/
-    /*border: 0px;*/
-    /*[>background-color: #607D8B;<]*/
-    /*[>box-shadow: 10px 10px 30px 1px rgba(0,0,0,0.75);<]*/
-/*}*/
+.animate-show.ng-hide-add, .animate-show.ng-hide-remove {
+    transition: all linear 1s;
+}
 
-/*.item-input-wrapper*/
-/*{*/
-    /*box-shadow: $shadow;*/
-/*}*/
-/*button.button*/
-/*{*/
-    /*box-shadow: $shadow;*/
-/*}*/
+.animate-show.ng-hide {
+    line-height: 0;
+    opacity: 0;
+    padding: 0 10px;
+}
+.animate-enter, 
+.animate-leave
+{ 
+    -webkit-transition: 400ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    -moz-transition: 400ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    -ms-transition: 400ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    -o-transition: 400ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    transition: 400ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    position: relative;
+    display: block;
+} 
 
+.animate-enter.animate-enter-active, 
+.animate-leave {
+    opacity: 1;
+    top: 0;
+    height: 30px;
+}
+
+.animate-leave.animate-leave-active,
+.animate-enter {
+    opacity: 0;
+    top: -50px;
+    height: 0px;
+}
+
+
+
+
+/* COLORS ----------------------------*/
+
+// the main/primary color
+$main-color: #E40A5D !default;
+// button colors
+$button-text-color: #f1f1f1;
+$button-box-shadow: 0 0 4px rgba(0,0,0,.14),0 4px 8px rgba(0,0,0,.28) !default;
+// labels colors
+$label-text-color: rgba(255, 255, 255, 0.8) !default;
+// labels background
+$label-background-color: rgba(0,0,0, .4);
+/* EFFECTS ---------------------------*/
+
+// which effects must be made available in the css
+$effects-zoomin: true !default;
+$effects-slidein: true !default;
+$effects-fountain: true !default;
+
+/* SPEEDS ----------------------------*/
+
+// the speed of the inflation of each button after hovering on the main button
+$delay-staggering-inflate: 0.1s !default;
+// when hovering on the main button the child buttons slide into view
+$slide-speed: .5s !default;
+// the labels disappear at this speed on mouse out
+$label-hover-off: .5s !default;
+// the labels appear at this speed on mouse over
+$label-hover-on: .3s !default;
+
+/* SIZES -----------------------------*/
+
+// main button diameter
+$main-button-size: 40px !default;
+// main button diameter
+$child_button_size: 30px !default;
+// the distance of the main button from the closest corners of the screen
+$border-distance: 0px !default;
+// font-size for the icons
+$icons-font-size: 18px !default;
+// font-size for labels
+$labels-font-size: 14px !default;
+// font-weight for labels
+$labels-font-weight: normal !default;
+// top & bottom padding for the labels
+$labels-padding-vertical: 0px !default;
+// left & right padding for the labels
+$labels-padding-horizontal: 0px !default;
+
+/* SPACING ---------------------------*/
+
+// space between buttons
+$button-space: 70px !default;
+// space between button and label
+$button-label-space: 70px !default;
+
+/* OTHER VARIABLES -------------------*/
+
+// how many child buttons does the component have
+$number-of-child-buttons: 4 !default;
+
+
+@import "www/lib/ng-material-floating-button/mfb/src/mfb";
+/*
+.item
+{
+    border: 0px;
+    [>background-color: #607D8B;<]
+    [>box-shadow: 10px 10px 30px 1px rgba(0,0,0,0.75);<]
+}
+
+.item-input-wrapper
+{
+    box-shadow: $shadow;
+}
+button.button
+{
+    box-shadow: $shadow;
+}
+ */
 // Scales for responsive SVG containers
 $ct-scales: ((1), (15/16), (8/9), (5/6), (4/5), (3/4), (2/3), (5/8), (1/1.618), (3/5), (9/16), (8/15), (1/2), (2/5), (3/8), (1/3), (1/4)) !default;
 $ct-scales-names: (ct-square, ct-minor-second, ct-major-second, ct-minor-third, ct-major-third, ct-perfect-fourth, ct-perfect-fifth, ct-minor-sixth, ct-golden-section, ct-major-sixth, ct-minor-seventh, ct-major-seventh, ct-octave, ct-major-tenth, ct-major-eleventh, ct-major-twelfth, ct-double-octave) !default;
@@ -164,25 +268,25 @@ $ct-include-alternative-responsive-containers: $ct-include-classes !default;
 // Series names and colors. This can be extended or customized as desired. Just add more series and colors.
 $ct-series-names: (a, b, c, d, e, f, g, h, i, j, k, l, m, n, o) !default;
 $ct-series-colors: (
-  #E53935,
-  #3949AB,
-  #43A047,
-  #D81B60,
-  #FDD835,
-  #8E24AA,
-  #0544d3,
-  #6b0392,
-  #f05b4f,
-  #dda458,
-  #eacf7d,
-  #86797d,
-  #b2c326,
-  #6188e2,
-  #a748ca
+#E53935,
+#3949AB,
+#43A047,
+#D81B60,
+#FDD835,
+#8E24AA,
+#0544d3,
+#6b0392,
+#f05b4f,
+#dda458,
+#eacf7d,
+#86797d,
+#b2c326,
+#6188e2,
+#a748ca
 ) !default;
 
 
-@import "www/lib/chartist/dist/scss/chartist.scss";
+@import "www/lib/chartist/dist/scss/chartist";
 
 
 $ct-class-legend: ct-legend !default;
@@ -192,6 +296,6 @@ $ct-class-legend: ct-legend !default;
         $color: nth($ct-series-colors, $i + 1);
         fill:$color
 
-  }
-    
+    }
+
 }
