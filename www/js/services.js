@@ -422,9 +422,22 @@ appServ.factory('initialRun', function ($localStorage) {
 });
 
 appServ.factory('cigTime', function($localStorage, DataBase){
+    var plus = 0;
+    var dat;
     var getMedian = function (data) {
-        var timeToAdd = 60/data + (parseInt($localStorage.get('timeFrame'))) ;
-        $localStorage.set('nextCig', new Date($localStorage.get('lastCig')).addMinutes(timeToAdd));
+        if(data === 0){
+            plus++;
+            dat.addMinutes(60);
+            DataBase.getMedian(dat, getMedian);
+        }else{
+            console.log(data);
+            var timeToAdd = 60/data + (parseInt($localStorage.get('timeFrame'))) + (plus * 60) ;
+            $localStorage.set('nextCig', new Date($localStorage.get('lastCig')).addMinutes(timeToAdd));
+        
+        }
+
+
+
     };
 
 
@@ -444,6 +457,8 @@ appServ.factory('cigTime', function($localStorage, DataBase){
         },
 
         setNextCig: function(date){
+            plus = 0;
+            dat = new Date(date);
             DataBase.getMedian(date, getMedian);
         }
     };
