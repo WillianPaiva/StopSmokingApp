@@ -269,6 +269,7 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
                         {day: {$gte: day2}},
                         {week: {$lte: week1}},
                         {week: {$gte: week2}},
+                        {hour: {$eq: hour}}
                     ]
                 },
             })).then(function(res){
