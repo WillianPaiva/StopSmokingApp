@@ -127,18 +127,27 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
         setChart: function(key, callback){
             var temp = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
             var temp2 = [];
+            var time={};
             $q.when(pouchService.db.find({
-                selector: {status: {$eq: key}},
+                selector: {
+                    status: {$eq: key},
+                    year: {$exists: true},
+                    month: {$exists: true},
+                    day: {$exists: true},
+                    hour: {$exists: true},
+                },
+                sort:['year', 'month' , 'day' , 'hour'],
             })).then(function(res){
+                time.f = res.docs[0].hour;
                 return $q.all(res.docs.map(function(doc){
+                    time.l = doc.hour;
                     temp2.push(doc.day);
                     return temp[doc.hour]++;
                 }));
             }).then(function(data){
                 temp2 = temp2.unique();
-                var h = new Date().getHours();
                 for(var i = 0; i < 24; i++){
-                    if(i <= h){
+                    if(i < time.l && i > time.f){
                         if(temp2.length > 0){
                             temp[i] = (temp[i]/temp2.length);
                         }
