@@ -57,6 +57,8 @@ app.run( function($ionicPlatform, $state, DataBase, initialRun, $localStorage){
             DataBase.byStatus();
             DataBase.lastWeek();
             DataBase.lastWeekWithHour();
+            DataBase.allData();
+            DataBase.allData2();
             DataBase.byMonthYear();
             $localStorage.set('timeFrame', 10);
             $localStorage.set('learnTime', 3);
