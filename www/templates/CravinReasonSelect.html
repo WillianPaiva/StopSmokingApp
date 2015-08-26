@@ -1,0 +1,18 @@
+<div class="list">
+
+    <label class="item item-input item-select">
+        <div class="input-label">
+            Reason
+        </div>
+        <select ng-model="reason" ng-change="setReason(reason)">
+            <option ng-repeat="(key,val) in reasons" value="{{key}}" >{{key}}</option>
+        </select>
+    </label>
+    Create a new reason
+    <div class="item item-input-inset">
+        <label class="item-input-wrapper">
+            <input type="text" placeholder="Reason" ng-model="newReason">
+        </label>
+        <button class="button button-icon icon ion-android-add-circle" ng-click="insertNewReason(newReason)"></button>
+    </div>
+</div>
