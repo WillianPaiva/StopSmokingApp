@@ -73,7 +73,6 @@ appCtrl.controller('DashCtrl', function($ionicLoading, $scope, DataBase, $ionicP
                 }
 
             }
-
         };
 
 
@@ -92,10 +91,11 @@ appCtrl.controller('DashCtrl', function($ionicLoading, $scope, DataBase, $ionicP
         $scope.tickInterval = 1000;
         $scope.chartBaseline = [0];
         $scope.chartLastWeek = [0];        
-
+        $scope.showCravingPopup = false;
         var tick = function(){
             if(cigTime.isLearnFinished($localStorage.get('learnTime'))){
                 if(cigTime.getNextCig().getTime() > new Date().getTime()){
+                    $scope.showCravingPopup = true;
                     var diff = Math.floor((cigTime.getNextCig().getTime() - new Date().getTime())/1000);
                     var days, hours, minutes, seconds;
                     days = Math.floor(diff / 86400);
@@ -119,11 +119,14 @@ appCtrl.controller('DashCtrl', function($ionicLoading, $scope, DataBase, $ionicP
                         $scope.button.class = "button button-block button-energized" ;
                     }
                 }else{
+                    $scope.showCravingPopup = false;
                     $scope.button.tex = 'Ready' ;
                     $scope.button.class = "button button-block button-balanced";
 
+
                 }
             }else{
+                $scope.showCravingPopup = false;
                 $scope.message = "In learn period";
                 $scope.button.class = "button button-block button-calm";
                 $scope.button.tex = "Register a smoking time";
@@ -165,6 +168,9 @@ appCtrl.controller('DashCtrl', function($ionicLoading, $scope, DataBase, $ionicP
                 DataBase.setChartLastWeek(new Date(), setMedian);
             }
             $localStorage.set('lastCig', new Date());
+            if($scope.showCravingPopup === true){
+                $scope.cravingPopup();
+            }
         } 
 
         $scope.click = function(){
@@ -187,7 +193,7 @@ appCtrl.controller('DashCtrl', function($ionicLoading, $scope, DataBase, $ionicP
         *  comparator date picker  *
         ****************************/
         $scope.datepickerObject = {
-            titleLabel: 'Select a Day to plot',  //Optional
+            //titleLabel: 'Select a Day to plot',  //Optional
             todayLabel: 'Today',  //Optional
             closeLabel: 'Close',  //Optional
             setLabel: 'Set',  //Optional
@@ -248,7 +254,7 @@ appCtrl.controller('DashCtrl', function($ionicLoading, $scope, DataBase, $ionicP
         /********************************
         *  clear the comparator chart  *
         ********************************/
-         $scope.removeItem = function(index){
+        $scope.removeItem = function(index){
             console.log(index);
             $scope.lineDataComp.series.splice(index,1);
             $scope.heightCompChart = $scope.lineDataComp.series.length ;
@@ -256,9 +262,9 @@ appCtrl.controller('DashCtrl', function($ionicLoading, $scope, DataBase, $ionicP
             if($scope.lineDataComp.series.length === 0){
                 $scope.toogleCompChart = false;
             }
-            
 
-         };
+
+        };
 
         $scope.clearData = function(){
             $scope.lineDataComp = {
@@ -289,6 +295,60 @@ appCtrl.controller('DashCtrl', function($ionicLoading, $scope, DataBase, $ionicP
                     {
                         text: 'Finish',
                         type: 'button-positive',
+                    },
+
+                ],
+
+
+            });
+        }        ;
+        /******************
+        *  cravin popup  *
+        ******************/
+
+        $scope.reasons = $localStorage.getObject('reasons');
+        console.log($scope.reasons);
+        $scope.reason = '';
+        $scope.setReason = function(reason){
+            $scope.reason = reason;
+        };
+
+        $scope.cravingReasonInsert = function(reason){
+            var temp = $localStorage.getObject('reasons');
+            if(!(temp.hasOwnProperty(reason))){
+                temp[reason] = 1;
+                $localStorage.setObject('reasons',temp) ;
+            }else{
+                temp[reason]++;
+                $localStorage.setObject('reasons',temp) ;
+            }
+            $scope.reasons = $localStorage.getObject('reasons');
+        };
+        $scope.insertNewReason = function(reason){
+            console.log(reason);
+            var temp = $localStorage.getObject('reasons');
+            if(!(temp.hasOwnProperty(reason))){
+                temp[reason]=0;
+                console.log(temp);
+                $localStorage.setObject('reasons',temp) ;
+            }else{
+                alert(reason + ' already exists');
+            }
+            $scope.reasons = $localStorage.getObject('reasons');
+
+        };
+        $scope.cravingPopup = function(){
+            var craPopup = $ionicPopup.show({
+                templateUrl: 'templates/CravinReasonSelect.html',
+                title: 'enter a why you cant resist you piece of shit',
+                scope: $scope,
+                buttons:[
+                    {
+                        text: 'Select',
+                        type: 'button-assertive',
+                        onTap: function(){
+                            $scope.cravingReasonInsert($scope.reason);
+                        }
                     },
 
                 ],
