@@ -1,7 +1,10 @@
 //$scope.chartHTML = $sce.trustAsHtml('<canvas id="comparator" class="chart chart-line" data="compData" labels="compLabels" legend="true" series="compSeries" ></canvas>');
 var appCtrl = angular.module('starter.controllers', ['ngSanitize','angular-chartist']);
 
-appCtrl.controller('DashCtrl', function($sce, $window, $scope, DataBase, $ionicPlatform, $localStorage, $timeout, cigTime, $ionicPopup, chart, $rootScope) {
+appCtrl.controller('DashCtrl', function($ionicLoading, $scope, DataBase, $ionicPlatform, $localStorage, $timeout, cigTime, $ionicPopup, chart, $rootScope) {
+    $ionicLoading.show({
+        template: 'Loading...'
+    });
     /****************************
     *  comparator date picker  *
     ****************************/
@@ -53,6 +56,7 @@ appCtrl.controller('DashCtrl', function($sce, $window, $scope, DataBase, $ionicP
             $scope.lineData.series.push(data);
             $scope.heightMainChart = $scope.lineData.series.length ;
             $scope.lineOptions = chart.options($scope.heightMainChart); 
+            $ionicLoading.hide();
         }
         $scope.event = {
             draw: function eventHandler(data) {
