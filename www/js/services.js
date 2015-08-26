@@ -53,11 +53,14 @@ appServ.factory('chart', function(){
                 },
                 low: 0,
                 showArea: true,
-                showPoint: false,
+                showPoint: true,
                 fullWidth: true,
                 plugins:[
                     legendPlugin({t: 'midle'})
-                ]
+                ],
+                lineSmooth: Chartist.Interpolation.cardinal({
+                    tension: 0.3
+                })
             };
             return options;
         },
@@ -433,7 +436,7 @@ appServ.factory('cigTime', function($localStorage, DataBase){
             console.log(data);
             var timeToAdd = 60/data + (parseInt($localStorage.get('timeFrame'))) + (plus * 60) ;
             $localStorage.set('nextCig', new Date($localStorage.get('lastCig')).addMinutes(timeToAdd));
-        
+
         }
 
 
