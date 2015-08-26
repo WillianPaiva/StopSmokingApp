@@ -50,8 +50,8 @@ app.run(function($ionicPlatform, DataBase) {
 app.run( function($ionicPlatform, $state, DataBase, initialRun, $localStorage){
     $ionicPlatform.ready( function(){
         var state = "tab.dash";  // whatever, the main page of your app
-
         if (initialRun.isInitialRun()) {
+            $localStorage.setObject('reasons',{'After Coffe':0, 'After sex':0, 'After Meal':0});
             initialRun.setInitialRun(false);
             state = "wizard.intro";
             DataBase.byStatus();
