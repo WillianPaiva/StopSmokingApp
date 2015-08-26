@@ -2,6 +2,31 @@
 var appCtrl = angular.module('starter.controllers', ['ngSanitize','angular-chartist']);
 
 appCtrl.controller('DashCtrl', function($sce, $window, $scope, DataBase, $ionicPlatform, $localStorage, $timeout, cigTime, $ionicPopup, chart, $rootScope) {
+    /****************************
+    *  comparator date picker  *
+    ****************************/
+    $scope.datepickerObject = {
+        //titleLabel: 'Select a Day to plot',  //Optional
+        todayLabel: 'Today',  //Optional
+        closeLabel: 'Close',  //Optional
+        setLabel: 'Set',  //Optional
+        errorMsgLabel : 'Please select time.',    //Optional
+        setButtonType : 'button-assertive',  //Optional
+        inputDate: new Date(),    //Optional
+        mondayFirst: true,    //Optional
+        //disabledDates: disabledDates, //Optional
+        //weekDaysList: weekDaysList,   //Optional
+        //monthList: monthList, //Optional
+        templateType: 'popup', //Optional
+        modalHeaderColor: 'bar-positive', //Optional
+        modalFooterColor: 'bar-positive', //Optional
+        from: new Date($localStorage.get('firstCig')),   //Optional
+        to: new Date(),    //Optional
+        callback: function (val) {    //Mandatory
+            $scope.insertDate(val);
+        }
+    };
+
     $ionicPlatform.ready(function(){
         /********************
         *  load chart data *
