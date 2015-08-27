@@ -8308,23 +8308,6 @@ a.button {
 /**
  * Apply this class to the html tag when developing the slide-in button
  */
-/*
-.item
-{
-    border: 0px;
-    [>background-color: #607D8B;<]
-    [>box-shadow: 10px 10px 30px 1px rgba(0,0,0,0.75);<]
-}
-
-.item-input-wrapper
-{
-    box-shadow: $shadow;
-}
-button.button
-{
-    box-shadow: $shadow;
-}
- */
 .ct-label {
   fill: rgba(0, 0, 0, 0.4);
   color: rgba(0, 0, 0, 0.4);
