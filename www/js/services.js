@@ -149,9 +149,20 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
                 }));
             }).then(function(data){
                 temp2 = temp2.unique();
+                var bool = null;
+
                 for(var i = 0; i < 24; i++){
-                    if(i < time.l && i > time.f){
+                    if(time.l > time.f){
+                        bool = ((time.l >= i ) && (time.f <= i));
+                    }else if(time.l === time.h){
+                        bool = (time.l < i);
+                    }else{
+                        bool = ((time.l <= i ) && (time.f >= i));
+
+                    }                    
+                    if(bool){
                         if(temp2.length > 0){
+                            console.log(time.l+' '+time.f);
                             temp[i] = (temp[i]/temp2.length);
                         }
                     }else{
@@ -202,10 +213,20 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
                     return temp[doc.hour]++;
                 }));
             }).then(function(data){
+                var bool = null;
                 temp2 = temp2.unique();
                 for(var i = 0; i < 24; i++){
-                    if(i > time.f && i < time.l){
+                    if(time.l > time.f){
+                        bool = ((time.l >= i ) && (time.f <= i));
+                    }else if(time.l === time.h){
+                        bool = (time.l < i);
+                    }else{
+                        bool = ((time.l <= i ) && (time.f >= i));
+
+                    }                    
+                    if(bool){
                         if(temp2.length > 0){
+                            console.log('test');
                             temp[i] = (temp[i]/temp2.length);
                         }
                     }else{
