@@ -1,11 +1,14 @@
 <ion-view view-title="Dashboard">
-    <ion-content class="padding">
+    <ion-content class="animate-fade-slide-in">
         <!--<nav mfb-menu position="tl" effect="zoomin" -->
             <!--active-icon="ion-minus-round" resting-icon="ion-plus-round"-->
             <!--toggling-method="click" ng-click="toogleMainChart()">-->
             <!--</nav>-->
+        
+        <br>
+        <br>
         <div 
-            chartist class="ct-chart" 
+            chartist class="item ct-chart" 
             chartist-events="event" 
             chartist-data="lineData" 
             chartist-chart-type="Line" 
@@ -13,9 +16,20 @@
             chartist-responsive-options="ResponsiveOptions"
             >
         </div>
-        <button class="{{button.class}}" ng-click="click()">
-            {{button.tex}}
-        </button>
+        <br>
+        <br>
+        <div class="item row">
+            <button class="{{button.class}}" ng-click="click()">
+                <strong> {{button.tex}} </strong> 
+            </button>
+        </div>
+        <div></div>
+        <br>
+        <div class="row">
+            <button class="item col button button-raised button-large button-stable"></button>
+            <div class="col col-10"></div>
+            <button class="item col button button-raised button-large button-assertive"></button>
+        </div>
         <!--<div class="item item-input-inset">-->
             <!--<label class="item-input-wrapper">-->
                 <!--[><i class="icon ion-social-usd "></i><]-->
