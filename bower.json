@@ -6,6 +6,7 @@
   },
   "dependencies": {
     "angular-chartist.js": "~3.3.6",
+    "angular-svg-round-progressbar": "~0.3.0",
     "chartist": "~0.9.4",
     "ionic-datepicker": "~0.9.0",
     "ionic-material": "~0.4.2",
