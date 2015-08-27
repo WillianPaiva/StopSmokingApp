@@ -1,9 +1,9 @@
 //$scope.chartHTML = $sce.trustAsHtml('<canvas id="comparator" class="chart chart-line" data="compData" labels="compLabels" legend="true" series="compSeries" ></canvas>');
 var appCtrl = angular.module('starter.controllers', ['ngSanitize','angular-chartist']);
 
-appCtrl.controller('DashCtrl', function($ionicLoading, $scope, DataBase, $ionicPlatform, $localStorage, $timeout, cigTime, $ionicPopup, chart, $rootScope) {
+appCtrl.controller('DashCtrl', function($ionicLoading, $scope, DataBase, $ionicPlatform, $localStorage, $timeout, cigTime, $ionicPopup, chart, $rootScope, ionicMaterialInk, ionicMaterialMotion ) {
     $ionicLoading.show({
-        template: 'Loading...'
+    template: 'Loading...'
     });
     /****************************
     *  comparator date picker  *
@@ -85,7 +85,7 @@ appCtrl.controller('DashCtrl', function($ionicLoading, $scope, DataBase, $ionicP
         ***********************************************/
 
         $scope.button = {};
-        $scope.button.class = "col button button-large button-positive";
+        $scope.button.class = "col button button-raised button-positive";
         $scope.button.tex = 'loading...';
         $scope.message = ""; 
         $scope.tickInterval = 1000;
@@ -107,28 +107,28 @@ appCtrl.controller('DashCtrl', function($ionicLoading, $scope, DataBase, $ionicP
                     seconds = diff % 60;
                     if(days > 0){
                         $scope.button.tex = 'too early wait: ' + days + 'd ' +  hours + 'h ' +  minutes + 'm ' +  seconds + 's';
-                        $scope.button.class = "col button button-large button-assertive" ;
+                        $scope.button.class = "col button button-raised button-large button-assertive" ;
                     }else if(hours > 0){
                         $scope.button.tex ='too early wait: ' +  hours + 'h ' +  minutes + 'm ' +  seconds + 's';
-                        $scope.button.class = "col button button-large button-assertive" ;
+                        $scope.button.class = "col button button-raised button-large button-assertive" ;
                     }else if(minutes > 0){
                         $scope.button.tex = 'too early wait: ' + minutes + 'm ' + seconds + 's';
-                        $scope.button.class = "col button button-large button-assertive" ;
+                        $scope.button.class = "col button button-raised button-large button-assertive" ;
                     }else if(seconds > 0){
                         $scope.button.tex = 'almost there wait: ' +  seconds + 's';
-                        $scope.button.class = "col button button-large button-energized" ;
+                        $scope.button.class = "col button button-raised button-large button-energized" ;
                     }
                 }else{
                     $scope.showCravingPopup = false;
                     $scope.button.tex = 'Ready' ;
-                    $scope.button.class = "col button button-large button-balanced";
+                    $scope.button.class = "col button button-raised button-balanced";
 
 
                 }
             }else{
                 $scope.showCravingPopup = false;
                 $scope.message = "In learn period";
-                $scope.button.class = "col button button-large button-calm";
+                $scope.button.class = "col button button-raised button-large button-calm";
                 $scope.button.tex = "Register a smoking time";
             }
             $timeout(tick, $scope.tickInterval);
@@ -356,7 +356,14 @@ appCtrl.controller('DashCtrl', function($ionicLoading, $scope, DataBase, $ionicP
 
             });
         }        ;
+        $timeout(function() {
+            ionicMaterialMotion.fadeSlideIn({
+                selector: '.animate-fade-slide-in .item'
+            });
+        }, 200);
+        ionicMaterialInk.displayEffect();
     });
+
 });
 
 appCtrl.controller('EcoCtrl', function($scope, $localStorage, DataBase){
