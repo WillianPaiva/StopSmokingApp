@@ -1,10 +1,7 @@
 //$scope.chartHTML = $sce.trustAsHtml('<canvas id="comparator" class="chart chart-line" data="compData" labels="compLabels" legend="true" series="compSeries" ></canvas>');
 var appCtrl = angular.module('starter.controllers', ['ngSanitize','angular-chartist']);
 
-appCtrl.controller('DashCtrl', function($ionicLoading, $scope, DataBase, $ionicPlatform, $localStorage, $timeout, cigTime, $ionicPopup, chart, $rootScope, ionicMaterialInk, ionicMaterialMotion ) {
-    $ionicLoading.show({
-    template: 'Loading...'
-    });
+appCtrl.controller('DashCtrl', function( $ionicLoading, $scope, DataBase, $ionicPlatform, $localStorage, $timeout, cigTime, $ionicPopup, chart, $rootScope, ionicMaterialInk, ionicMaterialMotion ) {
     /****************************
     *  comparator date picker  *
     ****************************/
@@ -56,7 +53,6 @@ appCtrl.controller('DashCtrl', function($ionicLoading, $scope, DataBase, $ionicP
             $scope.lineData.series.push(data);
             $scope.heightMainChart = $scope.lineData.series.length ;
             $scope.lineOptions = chart.options($scope.heightMainChart); 
-            $ionicLoading.hide();
         }
         $scope.event = {
             draw: function eventHandler(data) {
@@ -148,7 +144,19 @@ appCtrl.controller('DashCtrl', function($ionicLoading, $scope, DataBase, $ionicP
 
         function setBaseLine(data){
             chart.data('Base Line', data,pushData);
+            $timeout(function() {
+                ionicMaterialMotion.fadeSlideIn({
+                    selector: '.animate-fade-slide-in .item'
+                });
+            }, 200);
+
         }
+        $scope.$on('$ionicView.enter', function(){
+            ionicMaterialInk.displayEffect();
+            ionicMaterialMotion.fadeSlideIn({
+                selector: '.animate-fade-slide-in .item'
+            });
+        });
         function setMedian(data){
             $scope.lineData.series = [] ;
             chart.data('Last Week', data,pushData);
@@ -356,11 +364,6 @@ appCtrl.controller('DashCtrl', function($ionicLoading, $scope, DataBase, $ionicP
 
             });
         }        ;
-        $timeout(function() {
-            ionicMaterialMotion.fadeSlideIn({
-                selector: '.animate-fade-slide-in .item'
-            });
-        }, 200);
         ionicMaterialInk.displayEffect();
     });
 

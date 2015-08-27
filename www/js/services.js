@@ -162,7 +162,6 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
                     }                    
                     if(bool){
                         if(temp2.length > 0){
-                            console.log(time.l+' '+time.f);
                             temp[i] = (temp[i]/temp2.length);
                         }
                     }else{
