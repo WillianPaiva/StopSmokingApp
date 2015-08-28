@@ -46,6 +46,15 @@ app.run(function($ionicPlatform, DataBase) {
 //}
 //);
 
+app.run(function($ionicPlatform, chartData){
+    $ionicPlatform.ready(function(){
+        chartData.queryChart(); 
+    
+    });
+});
+
+
+
 
 app.run( function($ionicPlatform, $state, DataBase, initialRun, $localStorage){
     $ionicPlatform.ready( function(){
@@ -65,12 +74,7 @@ app.run( function($ionicPlatform, $state, DataBase, initialRun, $localStorage){
             $localStorage.set('price', 0.00);
             $localStorage.set('firstRun', true);
         }
-
         $state.go(state);
-
-
-
-
     });
 }
 );
