@@ -80,7 +80,32 @@ $base-background-color:             #fff !default;
 $ionicons-font-path: "../lib/ionic/fonts" !default;
 
 // Include all of Ionic
+$big-bg1:      '../ressources/background1.jpg';
+$big-bg2:      '../ressources/background2.jpg';
+
+
+
+
 @import "www/lib/ionic/scss/ionic";
+@import "www/lib/ionic-material/src/scss/index";
+
+.scroll-bg1 {
+  background: url($big-bg1) no-repeat center center fixed;
+  background-size: cover;
+}
+.scroll-bg2 {
+  background: url($big-bg2) no-repeat center center fixed;
+  background-size: cover;
+}
+.hero{
+    background: #6d6d6d;
+    opacity: 0.7;
+}
+.item{
+    border: 0px;
+}
+
+
 
 .animate-show.ng-hide-add, .animate-show.ng-hide-remove {
     transition: all linear 1s;
@@ -120,69 +145,6 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 
 
 
-/* COLORS ----------------------------*/
-
-// the main/primary color
-$main-color: #E40A5D !default;
-// button colors
-$button-text-color: #f1f1f1;
-$button-box-shadow: 0 0 4px rgba(0,0,0,.14),0 4px 8px rgba(0,0,0,.28) !default;
-// labels colors
-$label-text-color: rgba(255, 255, 255, 0.8) !default;
-// labels background
-$label-background-color: rgba(0,0,0, .4);
-/* EFFECTS ---------------------------*/
-
-// which effects must be made available in the css
-$effects-zoomin: true !default;
-$effects-slidein: true !default;
-$effects-fountain: true !default;
-
-/* SPEEDS ----------------------------*/
-
-// the speed of the inflation of each button after hovering on the main button
-$delay-staggering-inflate: 0.1s !default;
-// when hovering on the main button the child buttons slide into view
-$slide-speed: .5s !default;
-// the labels disappear at this speed on mouse out
-$label-hover-off: .5s !default;
-// the labels appear at this speed on mouse over
-$label-hover-on: .3s !default;
-
-/* SIZES -----------------------------*/
-
-// main button diameter
-$main-button-size: 40px !default;
-// main button diameter
-$child_button_size: 30px !default;
-// the distance of the main button from the closest corners of the screen
-$border-distance: 0px !default;
-// font-size for the icons
-$icons-font-size: 18px !default;
-// font-size for labels
-$labels-font-size: 14px !default;
-// font-weight for labels
-$labels-font-weight: normal !default;
-// top & bottom padding for the labels
-$labels-padding-vertical: 0px !default;
-// left & right padding for the labels
-$labels-padding-horizontal: 0px !default;
-
-/* SPACING ---------------------------*/
-
-// space between buttons
-$button-space: 70px !default;
-// space between button and label
-$button-label-space: 70px !default;
-
-/* OTHER VARIABLES -------------------*/
-
-// how many child buttons does the component have
-$number-of-child-buttons: 4 !default;
-
-
-@import "www/lib/ng-material-floating-button/mfb/src/mfb";
-
 
 
 
@@ -218,14 +180,14 @@ $ct-class-end: ct-end !default;
 $ct-container-ratio: (1/1.618) !default;
 
 // Text styles for labels
-$ct-text-color: rgba(0, 0, 0, 0.4) !default;
+$ct-text-color: $stable !default;
 $ct-text-size: 0.75rem !default;
 $ct-text-align: flex-start !default;
 $ct-text-justify: flex-start !default;
 $ct-text-line-height: 1;
 
 // Grid styles
-$ct-grid-color: rgba(0, 0, 0, 0.2) !default;
+$ct-grid-color: #8d8d8d !default;
 $ct-grid-dasharray: 2px !default;
 $ct-grid-width: 2px !default;
 
@@ -236,7 +198,7 @@ $ct-point-size: 6px !default;
 // Line chart point, can be either round or square
 $ct-point-shape: round !default;
 // Area fill transparency between 0 and 1
-$ct-area-opacity: 0.4 !default;
+$ct-area-opacity: 0.6 !default;
 
 // Bar chart bar width
 $ct-bar-width: 10px !default;
