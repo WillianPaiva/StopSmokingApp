@@ -1,7 +1,7 @@
 //$scope.chartHTML = $sce.trustAsHtml('<canvas id="comparator" class="chart chart-line" data="compData" labels="compLabels" legend="true" series="compSeries" ></canvas>');
 var appCtrl = angular.module('starter.controllers', ['ngSanitize','angular-chartist']);
 
-appCtrl.controller('DashCtrl', function( $ionicLoading, $scope, DataBase, $ionicPlatform, $localStorage, $timeout, cigTime, $ionicPopup, chart, $rootScope, ionicMaterialInk, ionicMaterialMotion ) {
+appCtrl.controller('DashCtrl', function(chart, chartData, DataBase, $scope, $ionicPlatform, $localStorage, $timeout, cigTime, $ionicPopup,  ionicMaterialInk, ionicMaterialMotion ) {
     /****************************
     *  comparator date picker  *
     ****************************/
@@ -32,7 +32,6 @@ appCtrl.controller('DashCtrl', function( $ionicLoading, $scope, DataBase, $ionic
         *  load chart data *
         *******************/
 
-        DataBase.setChartLastWeek(new Date(), setMedian);
 
 
 
@@ -44,6 +43,11 @@ appCtrl.controller('DashCtrl', function( $ionicLoading, $scope, DataBase, $ionic
         $scope.lineData = {
             series:[] 
         };
+        $scope.$on('$mainChartData.loaded', function(event, data){
+            $scope.lineData = data;
+            $scope.heightMainChart = $scope.lineData.series.length ;
+            $scope.lineOptions = chart.options($scope.heightMainChart); 
+        });
         $scope.heightMainChart = $scope.lineData.series.length ;
         $scope.lineOptions = chart.options($scope.heightMainChart); 
 
@@ -53,6 +57,7 @@ appCtrl.controller('DashCtrl', function( $ionicLoading, $scope, DataBase, $ionic
             $scope.lineData.series.push(data);
             $scope.heightMainChart = $scope.lineData.series.length ;
             $scope.lineOptions = chart.options($scope.heightMainChart); 
+                        
         }
         $scope.event = {
             draw: function eventHandler(data) {
@@ -85,8 +90,6 @@ appCtrl.controller('DashCtrl', function( $ionicLoading, $scope, DataBase, $ionic
         $scope.button.tex = 'loading...';
         $scope.message = ""; 
         $scope.tickInterval = 1000;
-        $scope.chartBaseline = [0];
-        $scope.chartLastWeek = [0];        
         $scope.showCravingPopup = false;
         var tick = function(){
             if(cigTime.isLearnFinished($localStorage.get('learnTime'))){
@@ -138,30 +141,7 @@ appCtrl.controller('DashCtrl', function( $ionicLoading, $scope, DataBase, $ionic
 
 
 
-        /***********************************************
-        *  callback functions to load the chart data  *
-        ***********************************************/
 
-        function setBaseLine(data){
-            chart.data('Base Line', data,pushData);
-            $timeout(function() {
-                ionicMaterialMotion.fadeSlideIn({
-                    selector: '.animate-fade-slide-in .item'
-                });
-            }, 200);
-
-        }
-        $scope.$on('$ionicView.enter', function(){
-            ionicMaterialInk.displayEffect();
-            ionicMaterialMotion.fadeSlideIn({
-                selector: '.animate-fade-slide-in .item'
-            });
-        });
-        function setMedian(data){
-            $scope.lineData.series = [] ;
-            chart.data('Last Week', data,pushData);
-            DataBase.setChart('Learn', setBaseLine);
-        }
         /****************************************
         *  function to insert data on the db   *
         ****************************************/
@@ -169,16 +149,15 @@ appCtrl.controller('DashCtrl', function( $ionicLoading, $scope, DataBase, $ionic
         function insert() {
             if(cigTime.isLearnFinished($localStorage.get('learnTime'))){
                 DataBase.InsertDate(new Date(), 'NotLearn');
-                DataBase.setChartLastWeek(new Date(), setMedian);
                 cigTime.setNextCig(new Date());
             }else{
                 DataBase.InsertDate(new Date(), 'Learn');
-                DataBase.setChartLastWeek(new Date(), setMedian);
             }
             $localStorage.set('lastCig', new Date());
             if($scope.showCravingPopup === true){
                 $scope.cravingPopup();
             }
+            chartData.queryChart();
         } 
 
         $scope.click = function(){
@@ -197,119 +176,95 @@ appCtrl.controller('DashCtrl', function( $ionicLoading, $scope, DataBase, $ionic
         ****************/
 
         $scope.toogleCompChart = false;
-        /****************************
-        *  comparator date picker  *
-        ****************************/
-        $scope.datepickerObject = {
-            //titleLabel: 'Select a Day to plot',  //Optional
-            todayLabel: 'Today',  //Optional
-            closeLabel: 'Close',  //Optional
-            setLabel: 'Set',  //Optional
-            errorMsgLabel : 'Please select time.',    //Optional
-            setButtonType : 'button-assertive',  //Optional
-            inputDate: new Date(),    //Optional
-            mondayFirst: true,    //Optional
-            //disabledDates: disabledDates, //Optional
-            //weekDaysList: weekDaysList,   //Optional
-            //monthList: monthList, //Optional
-            templateType: 'popup', //Optional
-            modalHeaderColor: 'bar-positive', //Optional
-            modalFooterColor: 'bar-positive', //Optional
-            from: new Date($localStorage.get('firstCig')),   //Optional
-            to: new Date(),    //Optional
-            callback: function (val) {    //Mandatory
-                $scope.insertDate(val);
-            }
-        };
         /**************************************************
         *  chart configuration for the comparator chart  *
         **************************************************/
 
-        $scope.lineDataComp = {
-            series:[] 
-        };
-        $scope.heightCompChart = $scope.lineDataComp.series.length ;
-        $scope.DateToInsert = new Date();    
-        $scope.insertDate = function(d){
-            if (typeof(d) === 'undefined') {
-                console.log('No date selected');
-            } else {
-                $scope.toogleCompChart = true;
-                DataBase.getAllDay(d,isertDateOnChart);
-            }
-        };
-        var test = false;
-        $scope.lineCompOptions = chart.options($scope.heightCompChart); 
+        //$scope.lineDataComp = {
+            //series:[] 
+        //};
+        //$scope.heightCompChart = $scope.lineDataComp.series.length ;
+        //$scope.DateToInsert = new Date();    
+        //$scope.insertDate = function(d){
+            //if (typeof(d) === 'undefined') {
+                //console.log('No date selected');
+            //} else {
+                //$scope.toogleCompChart = true;
+                //DataBase.getAllDay(d,isertDateOnChart);
+            //}
+        //};
+        //var test = false;
+        //$scope.lineCompOptions = chart.options($scope.heightCompChart); 
 
 
         /*******************************************
         *  callback functions to load chart data  *
         *******************************************/
 
-        function isertDateOnChart(serie,data){
-            chart.data(serie, data, insertSerie);
-        }
+        //function isertDateOnChart(serie,data){
+            //chart.data(serie, data, insertSerie);
+        //}
 
         /****************************************************
         *  funtion to insert a date an lunch the db query  *
         ****************************************************/
 
-        function insertSerie(data){
-            $scope.lineDataComp.series.push(data);
-            $scope.heightCompChart = $scope.lineDataComp.series.length ;
-            $scope.lineCompOptions = chart.options($scope.heightCompChart); 
-        }
+        //function insertSerie(data){
+            //$scope.lineDataComp.series.push(data);
+            //$scope.heightCompChart = $scope.lineDataComp.series.length ;
+            //$scope.lineCompOptions = chart.options($scope.heightCompChart); 
+        //}
         /********************************
         *  clear the comparator chart  *
         ********************************/
-        $scope.removeItem = function(index){
-            console.log(index);
-            $scope.lineDataComp.series.splice(index,1);
-            $scope.heightCompChart = $scope.lineDataComp.series.length ;
-            $scope.lineCompOptions = chart.options($scope.heightCompChart); 
-            if($scope.lineDataComp.series.length === 0){
-                $scope.toogleCompChart = false;
-            }
+        //$scope.removeItem = function(index){
+            //console.log(index);
+            //$scope.lineDataComp.series.splice(index,1);
+            //$scope.heightCompChart = $scope.lineDataComp.series.length ;
+            //$scope.lineCompOptions = chart.options($scope.heightCompChart); 
+            //if($scope.lineDataComp.series.length === 0){
+                //$scope.toogleCompChart = false;
+            //}
 
 
-        };
+        //};
 
-        $scope.clearData = function(){
-            $scope.lineDataComp = {
-                series:[]
-            };
-            $scope.heightCompChart = $scope.lineDataComp.series.length ;
-            $scope.lineCompOptions = chart.options($scope.heightCompChart); 
+        //$scope.clearData = function(){
+            //$scope.lineDataComp = {
+                //series:[]
+            //};
+            //$scope.heightCompChart = $scope.lineDataComp.series.length ;
+            //$scope.lineCompOptions = chart.options($scope.heightCompChart); 
 
-        };
-        $scope.removePopup = function(){
-            var remPopup = $ionicPopup.show({
-                templateUrl: 'templates/removeDatePopUp.html',
-                title: 'remove date',
-                scope: $scope,
-                buttons:[
-                    {
-                        text: 'Remove All',
-                        type: 'button-assertive',
-                        onTap: function(){
-                            $scope.lineDataComp = {
-                                series:[]
-                            };
-                            $scope.heightCompChart = $scope.lineDataComp.series.length ;
-                            $scope.lineCompOptions = chart.options($scope.heightCompChart); 
-                            $scope.toogleCompChart = false;
-                        }
-                    },
-                    {
-                        text: 'Finish',
-                        type: 'button-positive',
-                    },
+        //};
+        //$scope.removePopup = function(){
+            //var remPopup = $ionicPopup.show({
+                //templateUrl: 'templates/removeDatePopUp.html',
+                //title: 'remove date',
+                //scope: $scope,
+                //buttons:[
+                    //{
+                        //text: 'Remove All',
+                        //type: 'button-assertive',
+                        //onTap: function(){
+                            //$scope.lineDataComp = {
+                                //series:[]
+                            //};
+                            //$scope.heightCompChart = $scope.lineDataComp.series.length ;
+                            //$scope.lineCompOptions = chart.options($scope.heightCompChart); 
+                            //$scope.toogleCompChart = false;
+                        //}
+                    //},
+                    //{
+                        //text: 'Finish',
+                        //type: 'button-positive',
+                    //},
 
-                ],
+                //],
 
 
-            });
-        }        ;
+            //});
+        //}        ;
         /******************
         *  cravin popup  *
         ******************/
@@ -364,6 +319,12 @@ appCtrl.controller('DashCtrl', function( $ionicLoading, $scope, DataBase, $ionic
 
             });
         }        ;
+        $timeout(function() {
+                ionicMaterialMotion.fadeSlideIn({
+                    selector: '.animate-fade-slide-in .item'
+                });
+            }, 200);
+
         ionicMaterialInk.displayEffect();
     });
 
