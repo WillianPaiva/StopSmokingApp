@@ -1,5 +1,61 @@
 var appServ = angular.module('starter.services', []);
 
+
+
+appServ.factory('buttonTimeOut', function(cigTime,$localStorage, $timeout, $rootScope){
+    var button = {};
+    var cravingPopup = false;
+    var tickInterval = 1000;
+    var tick = function(){
+        if(cigTime.isLearnFinished($localStorage.get('learnTime'))){
+            if(cigTime.getNextCig().getTime() > new Date().getTime()){
+                showCravingPopup = true;
+                var diff = Math.floor((cigTime.getNextCig().getTime() - new Date().getTime())/1000);
+                var days, hours, minutes, seconds;
+                days = Math.floor(diff / 86400);
+                diff -= days * 86400;
+                hours = Math.floor(diff / 3600) % 24;
+                diff -= hours * 3600;
+                minutes = Math.floor(diff / 60) % 60;
+                diff -= minutes * 60;
+                seconds = diff % 60;
+                if(days > 0){
+                    button.tex = 'too early wait: ' + days + 'd ' +  hours + 'h ' +  minutes + 'm ' +  seconds + 's';
+                    button.class = "col button button-raised button-large button-assertive" ;
+                }else if(hours > 0){
+                    button.tex ='too early wait: ' +  hours + 'h ' +  minutes + 'm ' +  seconds + 's';
+                    button.class = "col button button-raised button-large button-assertive" ;
+                }else if(minutes > 0){
+                    button.tex = 'too early wait: ' + minutes + 'm ' + seconds + 's';
+                    button.class = "col button button-raised button-large button-assertive" ;
+                }else if(seconds > 0){
+                    button.tex = 'almost there wait: ' +  seconds + 's';
+                    button.class = "col button button-raised button-large button-energized" ;
+                }
+            }else{
+                showCravingPopup = false;
+                button.tex = 'Ready' ;
+                button.class = "col button button-raised button-balanced";
+
+
+            }
+        }else{
+            showCravingPopup = false;
+            button.class = "col button button-raised button-large button-calm";
+            button.tex = "Register a smoking time";
+        }
+        $rootScope.$broadcast('$button.refreshed',{button: button, cravingPopup: cravingPopup});
+        $timeout(tick, tickInterval);
+    };
+        $timeout(tick, tickInterval);
+
+    return true;
+});
+
+
+
+
+
 appServ.factory('$localStorage', ['$window', function($window){
     return {
         set: function(key, value) {
@@ -44,7 +100,7 @@ appServ.factory('chartData',function(DataBase, chart, $rootScope){
         mainChartData.series.push(data);
         count++;
         countAndSend();
-      }
+    }
     return{
         queryChart: function(){
             mainChartData = {
