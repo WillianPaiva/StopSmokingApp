@@ -23,6 +23,43 @@ appServ.factory('$localStorage', ['$window', function($window){
 
     };
 }]);
+
+appServ.factory('chartData',function(DataBase, chart, $rootScope){
+    var mainChartData = {
+        series:[],
+    };
+    var count = 0;
+    function setMedian(data){
+        chart.data('Last Week', data,pushData);
+    }
+    function setBaseLine(data){
+        chart.data('Base Line', data,pushData);
+    }
+    function countAndSend(){
+        if(count > 1){
+            $rootScope.$broadcast('$mainChartData.loaded',mainChartData);
+        }
+    }
+    function pushData(data){
+        mainChartData.series.push(data);
+        count++;
+        countAndSend();
+      }
+    return{
+        queryChart: function(){
+            mainChartData = {
+                series:[],
+            };
+            DataBase.setChartLastWeek(new Date(), setMedian);
+            DataBase.setChart('Learn', setBaseLine);
+        },
+
+
+    };
+
+});
+
+
 appServ.factory('chart', function(){
     return{
         options: function(multiplier){
