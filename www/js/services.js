@@ -137,6 +137,7 @@ appServ.factory('chart', function(){
                 },
                 axisY: {
                     scaleMinSpace: 15,
+                    offset: 17,
                 },
                 chartPadding: {
                     top: 15,
