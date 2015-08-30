@@ -246,15 +246,7 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
                 var bool = null;
 
                 for(var i = 0; i < 24; i++){
-                    if(time.l > time.f){
-                        bool = ((time.l >= i ) && (time.f <= i));
-                    }else if(time.l === time.h){
-                        bool = (time.l < i);
-                    }else{
-                        bool = ((time.l <= i ) && (time.f >= i));
-
-                    }                    
-                    if(bool){
+                    if((i >= time.l) && (i >= time.f)){
                         if(temp2.length > 0){
                             temp[i] = (temp[i]/temp2.length);
                         }
@@ -309,15 +301,7 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
                 var bool = null;
                 temp2 = temp2.unique();
                 for(var i = 0; i < 24; i++){
-                    if(time.l > time.f){
-                        bool = ((time.l >= i ) && (time.f <= i));
-                    }else if(time.l === time.h){
-                        bool = (time.l < i);
-                    }else{
-                        bool = ((time.l <= i ) && (time.f >= i));
-
-                    }                    
-                    if(bool){
+                    if((i >= time.l) && (i>=time.f)){
                         if(temp2.length > 0){
                             console.log('test');
                             temp[i] = (temp[i]/temp2.length);
