@@ -14,6 +14,7 @@
             chartist-responsive-options="ResponsiveOptions"
             >
         </div>
+        <button mfb-menu position="tr" effect="zoomin" active-icon="ion-ios-undo" resting-icon="ion-ios-undo" ng-click="undoButton()"></button>
         <br>
         <div class="item row">
             <div class="col col-10"></div>
@@ -22,15 +23,31 @@
             </button>
             <div class="col col-10"></div>
         </div>
-        <br>
-        <div ></div>
-        <div class="row">
-            <div class="col col-10"></div>
-            <button class="item col button button-raised icon-left ion-ios-undo  button-stable ink-dark " ng-click="undoButton()"></button>
-            <div class="col col-10"></div>
-        </div>
 
-        
+        <ul class="list">
+            <li class="item item-icon-left">
+                <i class="icon ion-social-usd"></i>
+                last 
+            </li>
+            <li class="item item-icon-left">
+                <i class="icon ion-social-usd"></i>
+                spent
+            </li>
+            <li class="item item-icon-left">
+                <i class="icon ion-social-usd"></i>
+                spent
+            </li>
+
+        </ul>
+
+
+
+
+
+
+
+
+
         <!--<div class="item item-input-inset">-->
             <!--<label class="item-input-wrapper">-->
                 <!--[><i class="icon ion-social-usd "></i><]-->
@@ -47,20 +64,6 @@
             <!--<button class="button button-small button-balanced">{{datepickerObject.inputDate | date:'dd/MMM/yyyy'}}</button>-->
         <!--</div>-->
 
-        <!--<div 
-            chartist class="ct-chart animate-show" 
-            chartist-events="event" 
-            chartist-data="lineDataComp"
-            chartist-chart-type="Line" 
-            chartist-chart-options="lineCompOptions"
-            chartist-responsive-options="ResponsiveOptions" 
-            ng-show="toogleCompChart"
-            >-->
-        <!--</div>-->
-
-        <!--<button class="button button-block button-assertive animate-show" ng-click="removePopup()" ng-show="toogleCompChart">-->
-            <!--Clear-->
-        <!--</button>-->
 
     </ion-content>
 </ion-view>
