@@ -1,0 +1,21 @@
+<ion-view view-title="Charts">
+    <ion-content class="padding ">
+
+        <div 
+            chartist class="ct-chart animate-show" 
+            chartist-events="event" 
+            chartist-data="lineDataComp"
+            chartist-chart-type="Line" 
+            chartist-chart-options="lineCompOptions"
+            chartist-responsive-options="ResponsiveOptions" 
+            ng-show="toogleCompChart"
+            >
+        </div>
+
+        <button class="button button-block button-assertive animate-show" ng-click="removePopup()" ng-show="toogleCompChart">
+            Clear
+        </button>
+
+    </ion-content>
+</ion-view>
+
