@@ -121,6 +121,16 @@ app.config(function($stateProvider, $urlRouterProvider) {
         }
     })
 
+    .state('tab.charts', {
+        url: '/charts',
+        views: {
+            'tab-charts': {
+                templateUrl: 'templates/tab-charts.html',
+                controller: 'ChartsCtrl'
+            }
+        }
+    })
+
     .state('tab.eco', {
         url: '/eco',
         views: {
