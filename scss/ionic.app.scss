@@ -172,6 +172,10 @@ $number-of-child-buttons: 4 !default;
     border: 0px;
 }
 
+a.item{
+    border: 0px;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+}
 
 
 .animate-show.ng-hide-add, .animate-show.ng-hide-remove {
