@@ -85,9 +85,75 @@ $big-bg2:      '../ressources/background2.jpg';
 
 
 
-
 @import "www/lib/ionic/scss/ionic";
 @import "www/lib/ionic-material/src/scss/index";
+
+
+
+/* COLORS ----------------------------*/
+
+// the main/primary color
+$main-color: $assertive !default;
+// button colors
+$button-text-color: #f1f1f1;
+$button-box-shadow: 0 0 4px rgba(0,0,0,.14),0 4px 8px rgba(0,0,0,.28) !default;
+// labels colors
+$label-text-color: rgba(255, 255, 255, 0.8) !default;
+// labels background
+$label-background-color: rgba(0,0,0, .4);
+/* EFFECTS ---------------------------*/
+
+// which effects must be made available in the css
+$effects-zoomin: true !default;
+$effects-slidein: true !default;
+$effects-fountain: true !default;
+
+/* SPEEDS ----------------------------*/
+
+// the speed of the inflation of each button after hovering on the main button
+$delay-staggering-inflate: 0.1s !default;
+// when hovering on the main button the child buttons slide into view
+$slide-speed: .5s !default;
+// the labels disappear at this speed on mouse out
+$label-hover-off: .5s !default;
+// the labels appear at this speed on mouse over
+$label-hover-on: .3s !default;
+
+/* SIZES -----------------------------*/
+
+// main button diameter
+$main-button-size: 46px !default;
+// main button diameter
+$child_button_size: 46px !default;
+// the distance of the main button from the closest corners of the screen
+$border-distance: 5px !default;
+// font-size for the icons
+$icons-font-size: 18px !default;
+// font-size for labels
+$labels-font-size: 14px !default;
+// font-weight for labels
+$labels-font-weight: normal !default;
+// top & bottom padding for the labels
+$labels-padding-vertical: 2px !default;
+// left & right padding for the labels
+$labels-padding-horizontal: 2px !default;
+
+/* SPACING ---------------------------*/
+
+// space between buttons
+$button-space: 70px !default;
+// space between button and label
+$button-label-space: 70px !default;
+
+/* OTHER VARIABLES -------------------*/
+
+// how many child buttons does the component have
+$number-of-child-buttons: 4 !default;
+
+
+
+
+@import "www/lib/ng-material-floating-button/mfb/src/mfb";
 
 /*.scroll-bg1 {*/
   /*background: url($big-bg1) no-repeat center center fixed;*/
@@ -99,7 +165,7 @@ $big-bg2:      '../ressources/background2.jpg';
 /*}*/
 
 .hero{
-    background: #6d6d6d;
+    background: #E0E0E0;
     opacity: 0.7;
 }
 .item{
@@ -181,14 +247,14 @@ $ct-class-end: ct-end !default;
 $ct-container-ratio: (1/1.618) !default;
 
 // Text styles for labels
-$ct-text-color: $stable !default;
+$ct-text-color: $dark !default;
 $ct-text-size: 0.75rem !default;
 $ct-text-align: flex-start !default;
 $ct-text-justify: flex-start !default;
 $ct-text-line-height: 1;
 
 // Grid styles
-$ct-grid-color: #8d8d8d !default;
+$ct-grid-color: $dark !default;
 $ct-grid-dasharray: 2px !default;
 $ct-grid-width: 2px !default;
 
