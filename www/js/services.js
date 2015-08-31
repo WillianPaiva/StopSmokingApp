@@ -47,7 +47,7 @@ appServ.factory('buttonTimeOut', function(cigTime,$localStorage, $timeout, $root
         $rootScope.$broadcast('$button.refreshed',{button: button, cravingPopup: cravingPopup});
         $timeout(tick, tickInterval);
     };
-        $timeout(tick, tickInterval);
+    $timeout(tick, tickInterval);
 
     return true;
 });
@@ -216,7 +216,19 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
                 minute: minute,
                 weekDay: weekDay,
             })).then(function(resp){
+                $localStorage.setObject('lastEntrance', resp);
                 console.log(resp);
+            }).catch(function(err){
+                console.log(err);
+            });
+        },
+        deleteItem: function(doc){
+            console.log(doc);
+            return $q.when(pouchService.db.get(doc.id))
+            .then(function(resp){
+                return pouchService.db.remove(resp);
+            }).then(function(suss){
+                console.log(suss);
             }).catch(function(err){
                 console.log(err);
             });
@@ -235,7 +247,9 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
                 },
                 sort:['year', 'month' , 'day' , 'hour'],
             })).then(function(res){
-                time.f = res.docs[0].hour;
+                if(res.hasOwnProperty('docs')){
+                    time.f = res.docs[0].hour;
+                }
                 return $q.all(res.docs.map(function(doc){
                     time.l = doc.hour;
                     temp2.push(doc.day);
@@ -291,7 +305,9 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
                 },
                 sort: ['month', 'day', 'hour']
             })).then(function(res){
-                time.f=res.docs[0].hour;
+                if(res.hasOwnProperty('docs')){
+                    time.f=res.docs[0].hour;
+                }
                 return $q.all(res.docs.map(function(doc){
                     time.l = doc.hour   ;
                     temp2.push(doc.day);

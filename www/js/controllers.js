@@ -31,6 +31,7 @@ appCtrl.controller('DashCtrl', function(chart, buttonTimeOut, chartData, DataBas
         /**************************
         *  chart configuration   *
         **************************/
+        $scope.cigButtonDisable = false;
 
         $scope.type = 'Line';
         $scope.lineData = {
@@ -83,8 +84,14 @@ appCtrl.controller('DashCtrl', function(chart, buttonTimeOut, chartData, DataBas
         });
 
 
-
-
+            /*****************
+             *  undo button  *
+             *****************/
+            
+        $scope.undoButton = function(){
+            DataBase.deleteItem($localStorage.getObject('lastEntrance'));    
+            chartData.queryChart();
+        };
 
 
 
@@ -92,6 +99,12 @@ appCtrl.controller('DashCtrl', function(chart, buttonTimeOut, chartData, DataBas
         *  function to insert data on the db   *
         ****************************************/
 
+        function timeOutButton(){
+            $scope.cigButtonDisable = true;
+            $timeout(function() {
+                $scope.cigButtonDisable = false;
+            }, 5000); 
+        }
         function insert() {
             if(cigTime.isLearnFinished($localStorage.get('learnTime'))){
                 DataBase.InsertDate(new Date(), 'NotLearn');
@@ -104,6 +117,7 @@ appCtrl.controller('DashCtrl', function(chart, buttonTimeOut, chartData, DataBas
                 $scope.cravingPopup();
             }
             chartData.queryChart();
+            timeOutButton();
         } 
 
         $scope.click = function(){
