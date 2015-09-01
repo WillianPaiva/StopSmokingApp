@@ -1,7 +1,30 @@
 //$scope.chartHTML = $sce.trustAsHtml('<canvas id="comparator" class="chart chart-line" data="compData" labels="compLabels" legend="true" series="compSeries" ></canvas>');
 var appCtrl = angular.module('starter.controllers', ['ngSanitize','angular-chartist']);
 
-appCtrl.controller('DashCtrl', function(chart, buttonTimeOut, chartData, DataBase, $scope, $ionicPlatform, $localStorage, $timeout, cigTime, $ionicPopup,  ionicMaterialInk, ionicMaterialMotion ) {
+appCtrl.controller('DashCtrl', ['$ionicPlatform',
+                                '$ionicPopup', 
+                                '$localStorage', 
+                                '$scope', 
+                                '$timeout', 
+                                'DataBase', 
+                                'buttonTimeOut', 
+                                'chart', 
+                                'chartData', 
+                                'cigTime', 
+                                'ionicMaterialInk', 
+                                'ionicMaterialMotion', 
+                                function($ionicPlatform, 
+                                $ionicPopup, 
+                                $localStorage, 
+                                $scope, 
+                                $timeout, 
+                                DataBase, 
+                                buttonTimeOut, 
+                                chart, 
+                                chartData, 
+                                cigTime, 
+                                ionicMaterialInk,
+                                ionicMaterialMotion) {
     /****************************
     *  comparator date picker  *
     ****************************/
@@ -289,9 +312,9 @@ appCtrl.controller('DashCtrl', function(chart, buttonTimeOut, chartData, DataBas
         ionicMaterialInk.displayEffect();
     });
 
-});
+}]);
 
-appCtrl.controller('EcoCtrl', function($scope, $localStorage, DataBase){
+appCtrl.controller('EcoCtrl', ['$localStorage', '$scope', 'DataBase', function($localStorage, $scope, DataBase){
     $scope.price = parseFloat($localStorage.get('price')) ;
     $scope.submitPrice = function(data){
         $localStorage.set('price', data);
@@ -329,10 +352,10 @@ appCtrl.controller('EcoCtrl', function($scope, $localStorage, DataBase){
     //$scope.$on("$ionicView.afterLeave", function () {
     //$ionicHistory.clearCache();
     //}); 
-});
+}]);
 
 
-appCtrl.controller('SettingsCtrl', function($window,$scope, $localStorage, $ionicPopup, pouchService, DataBase){
+appCtrl.controller('SettingsCtrl', ['$ionicPopup', '$localStorage', '$scope', '$window', 'DataBase', 'pouchService', function($ionicPopup, $localStorage, $scope, $window, DataBase, pouchService){
     $scope.timeFrame = parseInt($localStorage.get('timeFrame')) ;
     $scope.learnTime = parseInt($localStorage.get('learnTime')) ;
 
@@ -373,9 +396,9 @@ appCtrl.controller('SettingsCtrl', function($window,$scope, $localStorage, $ioni
         });
     };
 
-});
+}]);
 
-appCtrl.controller('introCtrl',['$scope', '$ionicPopup', '$state', function($scope, $ionicPopup, $state) {
+appCtrl.controller('introCtrl',['$ionicPopup', '$scope', '$state', function($ionicPopup, $scope, $state) {
     $scope.start = function() {
         $state.go('tab.dash');
     };

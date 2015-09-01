@@ -65,6 +65,7 @@ app.run( function($ionicPlatform, $state, DataBase, initialRun, $localStorage){
             state = "wizard.intro";
             DataBase.byStatus();
             DataBase.lastWeek();
+            DataBase.lastWeek2();
             DataBase.lastWeekWithHour();
             DataBase.allData();
             DataBase.allData2();
