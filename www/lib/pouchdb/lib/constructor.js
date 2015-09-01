@@ -9,6 +9,7 @@ var TaskQueue = require('./taskqueue');
 var Promise = utils.Promise;
 
 function defaultCallback(err) {
+  /* istanbul ignore next */
   if (err && global.debug) {
     console.error(err);
   }
@@ -25,24 +26,28 @@ function defaultCallback(err) {
 // by the constructor, which then broadcasts it to any other dbs
 // that may have been created with the same name.
 function prepareForDestruction(self, opts) {
+  var name = opts.originalName;
+  var ctor = self.constructor;
+  var destructionListeners = ctor._destructionListeners;
 
-  function constructorDestructionListener(name) {
-    if (name === opts.originalName) {
-      self.removeListener('destroyed', destructionListener);
-      self.emit('destroyed', self);
-    }
-  }
-
-  function destructionListener() {
-    // we destroyed ourselves, so no need to listen on the constructor
-    PouchDB.removeListener('destroyed', constructorDestructionListener);
-    PouchDB.emit('destroyed', opts.originalName);
+  function onDestroyed() {
+    ctor.emit('destroyed', name);
     //so we don't have to sift through all dbnames
-    PouchDB.emit(opts.originalName, 'destroyed');
+    ctor.emit(name, 'destroyed');
   }
 
-  PouchDB.once('destroyed', constructorDestructionListener);
-  self.once('destroyed', destructionListener);
+  function onConstructorDestroyed() {
+    self.removeListener('destroyed', onDestroyed);
+    self.emit('destroyed', self);
+  }
+
+  self.once('destroyed', onDestroyed);
+
+  // in setup.js, the constructor is primed to listen for destroy events
+  if (!destructionListeners.has(name)) {
+    destructionListeners.set(name, []);
+  }
+  destructionListeners.get(name).push(onConstructorDestroyed);
 }
 
 utils.inherits(PouchDB, Adapter);
@@ -65,7 +70,7 @@ function PouchDB(name, opts, callback) {
     callback = defaultCallback;
   }
   name = name || opts.name;
-  opts = opts ? utils.clone(opts) : {};
+  opts = utils.clone(opts);
   // if name was specified via opts, ignore for the sake of dependentDbs
   delete opts.name;
   this.__opts = opts;
@@ -147,10 +152,8 @@ function PouchDB(name, opts, callback) {
 
     PouchDB.adapters[opts.adapter].call(self, opts, function (err) {
       if (err) {
-        if (callback) {
-          self.taskqueue.fail(err);
-          callback(err);
-        }
+        self.taskqueue.fail(err);
+        callback(err);
         return;
       }
       prepareForDestruction(self, opts);
@@ -168,6 +171,7 @@ function PouchDB(name, opts, callback) {
       });
     }
 
+    /* istanbul ignore next */
     if (utils.isCordova()) {
       //to inform websql adapter that we can use api
       cordova.fireWindowEvent(opts.name + "_pouch", {});

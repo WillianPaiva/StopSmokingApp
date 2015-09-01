@@ -12,15 +12,28 @@ PouchDB.prefix = '_pouch_';
 
 var eventEmitter = new EE();
 
-function bindEventEmitterMethods(Pouch) {
+function setUpEventEmitter(Pouch) {
   Object.keys(EE.prototype).forEach(function (key) {
     if (typeof EE.prototype[key] === 'function') {
       Pouch[key] = eventEmitter[key].bind(eventEmitter);
     }
   });
+
+  // these are created in constructor.js, and allow us to notify each DB with
+  // the same name that it was destroyed, via the constructor object
+  var destructionListeners = Pouch._destructionListeners = new utils.Map();
+  Pouch.on('destroyed', function onConstructorDestroyed(name) {
+    if (!destructionListeners.has(name)) {
+      return;
+    }
+    destructionListeners.get(name).forEach(function (callback) {
+      callback();
+    });
+    destructionListeners.delete(name);
+  });
 }
 
-bindEventEmitterMethods(PouchDB);
+setUpEventEmitter(PouchDB);
 
 PouchDB.parseAdapter = function (name, opts) {
   var match = name.match(/([a-z\-]*):\/\/(.*)/);
@@ -112,6 +125,10 @@ PouchDB.plugin = function (obj) {
 
 PouchDB.defaults = function (defaultOpts) {
   function PouchAlt(name, opts, callback) {
+    if (!(this instanceof PouchAlt)) {
+      return new PouchAlt(name, opts, callback);
+    }
+
     if (typeof opts === 'function' || typeof opts === 'undefined') {
       callback = opts;
       opts = {};
@@ -121,7 +138,7 @@ PouchDB.defaults = function (defaultOpts) {
       name = undefined;
     }
 
-    opts = utils.extend(true, {}, defaultOpts, opts);
+    opts = utils.extend({}, defaultOpts, opts);
     PouchDB.call(this, name, opts, callback);
   }
 
@@ -137,11 +154,11 @@ PouchDB.defaults = function (defaultOpts) {
       opts = name;
       name = undefined;
     }
-    opts = utils.extend(true, {}, defaultOpts, opts);
+    opts = utils.extend({}, defaultOpts, opts);
     return PouchDB.destroy(name, opts, callback);
   });
 
-  bindEventEmitterMethods(PouchAlt);
+  setUpEventEmitter(PouchAlt);
 
   PouchAlt.preferredAdapters = PouchDB.preferredAdapters.slice();
   Object.keys(PouchDB).forEach(function (key) {

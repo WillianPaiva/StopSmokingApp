@@ -1,6 +1,5 @@
 /*jshint strict: false */
 var merge = require('./merge');
-exports.extend = require('pouchdb-extend');
 exports.ajax = require('./deps/ajax/prequest');
 exports.uuid = require('./deps/uuid');
 exports.getArguments = require('argsarray');
@@ -24,13 +23,11 @@ var binStringToBlobOrBuffer =
 // TODO: only used by the integration tests
 exports.binaryStringToBlobOrBuffer = binStringToBlobOrBuffer;
 
-exports.clone = function (obj) {
-  return exports.extend(true, {}, obj);
-};
+exports.clone = require('./deps/clone');
+exports.extend = require('./deps/extend');
 
 exports.pick = require('./deps/pick');
 exports.inherits = require('inherits');
-exports.call = require('./deps/call');
 
 exports.filterChange = function filterChange(opts) {
   var req = {};

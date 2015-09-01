@@ -6,6 +6,7 @@ var errors = require('./../errors');
 var utils = require('../../utils');
 var applyTypeToBuffer = require('./applyTypeToBuffer');
 var defaultBody = require('./defaultBody');
+var explainCors = require('./explainCors');
 
 function ajax(options, callback) {
 
@@ -20,7 +21,7 @@ function ajax(options, callback) {
     cache: false
   };
 
-  options = utils.extend(true, defaultOptions, options);
+  options = utils.extend(defaultOptions, options);
 
 
   function onSuccess(obj, resp, cb) {
@@ -87,7 +88,14 @@ function ajax(options, callback) {
 
   return request(options, function (err, response, body) {
     if (err) {
-      err.status = response ? response.statusCode : 400;
+      if (response) {
+        if (response.statusCode === 0) {
+          explainCors(); // statusCode 0 indicates a CORS error (405)
+        }
+        err.status = response.statusCode;
+      } else {
+        err.status = 400;
+      }
       return onError(err, callback);
     }
 
@@ -101,18 +109,14 @@ function ajax(options, callback) {
         typeof data !== 'object' &&
         (/json/.test(content_type) ||
          (/^[\s]*\{/.test(data) && /\}[\s]*$/.test(data)))) {
-      data = JSON.parse(data);
+      try {
+        data = JSON.parse(data.toString());
+      } catch (e) {}
     }
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
       onSuccess(data, response, callback);
     } else {
-      try {
-        // See if we received an error message from the server
-        // If the connection was interrupted, the data might be nothing
-        // that's why we have the try/catch
-        data = JSON.parse(data.toString());
-      } catch(e) {}
       error = errors.generateErrorFromResponse(data);
       error.status = response.statusCode;
       callback(error);

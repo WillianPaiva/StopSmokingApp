@@ -25,7 +25,7 @@ var migrate = require('../../deps/migrate');
 var Deque = require("double-ended-queue");
 var atob = require('../../deps/binary/base64').atob;
 var btoa = require('../../deps/binary/base64').btoa;
-
+var functionName = require('../../deps/functionName');
 var readAsBluffer = require('./readAsBlobOrBuffer');
 var prepareAttachmentForStorage = require('./prepareAttachmentForStorage');
 var createEmptyBluffer = require('./createEmptyBlobOrBuffer');
@@ -60,6 +60,18 @@ var safeJsonEncoding = {
   buffer: false,
   type: 'cheap-json'
 };
+
+// winningRev and deleted are performance-killers, but
+// in newer versions of PouchDB, they are cached on the metadata
+function getWinningRev(metadata) {
+  return 'winningRev' in metadata ?
+    metadata.winningRev : merge.winningRev(metadata);
+}
+
+function getIsDeleted(metadata, winningRev) {
+  return 'deleted' in metadata ?
+    metadata.deleted : isDeleted(metadata, winningRev);
+}
 
 function fetchAttachment(att, stores, opts) {
   var type = att.content_type;
@@ -135,11 +147,11 @@ function LevelPouch(opts, callback) {
     leveldown.destroy = function (name, cb) { cb(); };
   }
   var dbStore;
-  if (dbStores.has(leveldown.name)) {
+  if (dbStores.has(functionName(leveldown))) {
     dbStore = dbStores.get(leveldown.name);
   } else {
     dbStore = new utils.Map();
-    dbStores.set(leveldown.name, dbStore);
+    dbStores.set(functionName(leveldown), dbStore);
   }
   if (dbStore.has(name)) {
     db = dbStore.get(name);
@@ -208,7 +220,7 @@ function LevelPouch(opts, callback) {
     var res = {
       doc_count: db._docCount,
       update_seq: db._updateSeq,
-      backend_adapter: leveldown.name
+      backend_adapter: functionName(leveldown)
     };
     return process.nextTick(function () {
       callback(null, res);
@@ -333,11 +345,12 @@ function LevelPouch(opts, callback) {
         return callback(errors.error(errors.MISSING_DOC, 'missing'));
       }
 
-      if (isDeleted(metadata) && !opts.rev) {
+      var rev = getWinningRev(metadata);
+      var deleted = getIsDeleted(metadata, rev);
+      if (deleted && !opts.rev) {
         return callback(errors.error(errors.MISSING_DOC, "deleted"));
       }
 
-      var rev = merge.winningRev(metadata);
       rev = opts.rev ? opts.rev : rev;
 
       var seq = metadata.rev_map[rev];
@@ -529,6 +542,9 @@ function LevelPouch(opts, callback) {
 
       var err = null;
       var recv = 0;
+
+      docInfo.metadata.winningRev = winningRev;
+      docInfo.metadata.deleted = winningRevIsDeleted;
 
       docInfo.data._id = docInfo.metadata.id;
       docInfo.data._rev = docInfo.metadata.rev;
@@ -816,7 +832,12 @@ function LevelPouch(opts, callback) {
       var docstream = stores.docStore.readStream(readstreamOpts);
 
       var throughStream = through(function (entry, _, next) {
-        if (!isDeleted(entry.value)) {
+        var metadata = entry.value;
+        // winningRev and deleted are performance-killers, but
+        // in newer versions of PouchDB, they are cached on the metadata
+        var winningRev = getWinningRev(metadata);
+        var deleted = getIsDeleted(metadata, winningRev);
+        if (!deleted) {
           if (skip-- > 0) {
             next();
             return;
@@ -830,12 +851,12 @@ function LevelPouch(opts, callback) {
           next();
           return;
         }
-        function allDocsInner(metadata, data) {
+        function allDocsInner(data) {
           var doc = {
             id: metadata.id,
             key: metadata.id,
             value: {
-              rev: merge.winningRev(metadata)
+              rev: winningRev
             }
           };
           if (opts.include_docs) {
@@ -852,7 +873,7 @@ function LevelPouch(opts, callback) {
           }
           if (opts.inclusive_end === false && metadata.id === opts.endkey) {
             return next();
-          } else if (isDeleted(metadata)) {
+          } else if (deleted) {
             if (opts.deleted === 'ok') {
               doc.value.deleted = true;
               doc.doc = null;
@@ -863,15 +884,14 @@ function LevelPouch(opts, callback) {
           results.push(doc);
           next();
         }
-        var metadata = entry.value;
         if (opts.include_docs) {
-          var seq = metadata.rev_map[merge.winningRev(metadata)];
+          var seq = metadata.rev_map[winningRev];
           stores.bySeqStore.get(formatSeq(seq), function (err, data) {
-            allDocsInner(metadata, data);
+            allDocsInner(data);
           });
         }
         else {
-          allDocsInner(metadata);
+          allDocsInner();
         }
       }, function (next) {
         utils.Promise.resolve().then(function () {
@@ -980,7 +1000,7 @@ function LevelPouch(opts, callback) {
       var metadata;
 
       function onGetMetadata(metadata) {
-        var winningRev = merge.winningRev(metadata);
+        var winningRev = getWinningRev(metadata);
 
         function onGetWinningDoc(winningDoc) {
 

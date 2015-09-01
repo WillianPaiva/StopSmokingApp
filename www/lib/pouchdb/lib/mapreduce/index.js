@@ -9,7 +9,7 @@ var normalizeKey = pouchCollate.normalizeKey;
 var parseIndexableString = pouchCollate.parseIndexableString;
 var createView = require('./create-view');
 var evalFunc = require('./evalfunc');
-var log; 
+var log;
 /* istanbul ignore else */
 if ((typeof console !== 'undefined') && (typeof console.log === 'function')) {
   log = Function.prototype.bind.call(console.log, console);
@@ -17,7 +17,8 @@ if ((typeof console !== 'undefined') && (typeof console.log === 'function')) {
   log = function () {};
 }
 var utils = require('./utils');
-var Promise = utils.Promise;
+var Promise = require('../deps/promise');
+var inherits = require('inherits');
 var persistentQueues = {};
 var tempViewQueue = new TaskQueue();
 var CHANGES_BATCH_SIZE = 50;
@@ -234,7 +235,9 @@ function httpQuery(db, fun, opts) {
   addHttpParam('stale', opts, params);
   addHttpParam('conflicts', opts, params);
   addHttpParam('startkey', opts, params, true);
+  addHttpParam('start_key', opts, params, true);
   addHttpParam('endkey', opts, params, true);
+  addHttpParam('end_key', opts, params, true);
   addHttpParam('inclusive_end', opts, params);
   addHttpParam('key', opts, params, true);
 
@@ -679,6 +682,12 @@ function queryViewInQueue(view, opts) {
     var viewOpts = {
       descending : opts.descending
     };
+    if (opts.start_key) {
+        opts.startkey = opts.start_key;
+    }
+    if (opts.end_key) {
+        opts.endkey = opts.end_key;
+    }
     if (typeof opts.startkey !== 'undefined') {
       viewOpts.startkey = opts.descending ?
         toIndexableString([opts.startkey, {}]) :
@@ -850,7 +859,7 @@ exports.query = function (fun, opts, callback) {
     callback = opts;
     opts = {};
   }
-  opts = utils.extend(true, {}, opts);
+  opts = opts || {};
 
   if (typeof fun === 'function') {
     fun = {map : fun};
@@ -874,7 +883,7 @@ function QueryParseError(message) {
   } catch (e) {}
 }
 
-utils.inherits(QueryParseError, Error);
+inherits(QueryParseError, Error);
 
 function NotFoundError(message) {
   this.status = 404;
@@ -886,7 +895,7 @@ function NotFoundError(message) {
   } catch (e) {}
 }
 
-utils.inherits(NotFoundError, Error);
+inherits(NotFoundError, Error);
 
 function BuiltInError(message) {
   this.status = 500;
@@ -898,4 +907,4 @@ function BuiltInError(message) {
   } catch (e) {}
 }
 
-utils.inherits(BuiltInError, Error);
+inherits(BuiltInError, Error);

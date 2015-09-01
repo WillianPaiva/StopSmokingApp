@@ -142,7 +142,7 @@ function HttpPouch(opts, callback) {
   var ajaxOpts = opts.ajax || {};
   opts = clone(opts);
   function ajax(options, callback) {
-    var reqOpts = utils.extend(true, clone(ajaxOpts), options);
+    var reqOpts = utils.extend(clone(ajaxOpts), options);
     log(reqOpts.method + ' ' + reqOpts.url);
     return utils.ajax(reqOpts, callback);
   }
@@ -225,11 +225,8 @@ function HttpPouch(opts, callback) {
       method: 'GET',
       url: genUrl(host, '')
     }, function (err, result) {
-      /* istanbul ignore next */
-      if (err) {
-        return callback(err);
-      }
-      var uuid = result.uuid + host.db;
+      var uuid = (result && result.uuid) ?
+        (result.uuid + host.db) : genDBUrl(host, '');
       callback(null, uuid);
     });
   });
@@ -351,7 +348,7 @@ function HttpPouch(opts, callback) {
       url: genDBUrl(host, id + params)
     };
     var getRequestAjaxOpts = opts.ajax || {};
-    utils.extend(true, options, getRequestAjaxOpts);
+    utils.extend(options, getRequestAjaxOpts);
 
     function fetchAttachments(doc) {
       var atts = doc._attachments;
@@ -695,6 +692,10 @@ function HttpPouch(opts, callback) {
     if (opts.key) {
       params.push('key=' + encodeURIComponent(JSON.stringify(opts.key)));
     }
+    
+    if (opts.start_key) {
+      opts.startkey = opts.start_key;
+    }
 
     // If opts.startkey exists, add the startkey value to the list of
     // parameters.
@@ -703,6 +704,10 @@ function HttpPouch(opts, callback) {
     if (opts.startkey) {
       params.push('startkey=' +
         encodeURIComponent(JSON.stringify(opts.startkey)));
+    }
+
+    if (opts.end_key) {
+      opts.endkey = opts.end_key;
     }
 
     // If opts.endkey exists, add the endkey value to the list of parameters.
@@ -852,9 +857,6 @@ function HttpPouch(opts, callback) {
       }
     }
 
-    if (opts.continuous && api._useSSE) {
-      return  api.sse(opts, params, returnDocs);
-    }
     var xhr;
     var lastFetchedSeq;
 
@@ -941,7 +943,7 @@ function HttpPouch(opts, callback) {
         // In case of an error, stop listening for changes and call
         // opts.complete
         opts.aborted = true;
-        utils.call(opts.complete, err);
+        opts.complete(err);
         return;
       }
 
@@ -967,7 +969,7 @@ function HttpPouch(opts, callback) {
         var maximumWait = opts.maximumWait || 30000;
 
         if (retryWait > maximumWait) {
-          utils.call(opts.complete, err || errors.error(errors.UNKNOWN_ERROR));
+          opts.complete(err || errors.error(errors.UNKNOWN_ERROR));
           return;
         }
 
@@ -975,7 +977,7 @@ function HttpPouch(opts, callback) {
         setTimeout(function () { fetch(lastFetchedSeq, fetched); }, retryWait);
       } else {
         // We're done, call the callback
-        utils.call(opts.complete, null, results);
+        opts.complete(null, results);
       }
     };
 
@@ -991,63 +993,6 @@ function HttpPouch(opts, callback) {
       }
     };
   };
-
-  api.sse = function (opts, params, returnDocs) {
-    params.feed = 'eventsource';
-    params.since = opts.since || 0;
-    params.limit = opts.limit;
-    delete params.timeout;
-    var paramStr = '?' + Object.keys(params).map(function (k) {
-      return k + '=' + params[k];
-    }).join('&');
-    var url = genDBUrl(host, '_changes' + paramStr);
-    var source = new EventSource(url);
-    var results = {
-      results: [],
-      last_seq: false
-    };
-    var dispatched = false;
-    var open = false;
-    source.addEventListener('message', msgHandler, false);
-    source.onopen = function () {
-      open = true;
-    };
-    source.onerror = errHandler;
-    return {
-      cancel: function () {
-        if (dispatched) {
-          return dispatched.cancel();
-        }
-        source.removeEventListener('message', msgHandler, false);
-        source.close();
-      }
-    };
-    function msgHandler(e) {
-      var data = JSON.parse(e.data);
-      if (returnDocs) {
-        results.results.push(data);
-      }
-      results.last_seq = data.seq;
-      utils.call(opts.onChange, data);
-    }
-    function errHandler(err) {
-      source.removeEventListener('message', msgHandler, false);
-      if (open === false) {
-        // errored before it opened
-        // likely doesn't support EventSource
-        api._useSSE = false;
-        dispatched = api._changes(opts);
-        return;
-      }
-      source.close();
-      utils.call(opts.complete, err);
-    }
-
-  };
-
-  api._useSSE = false;
-  // Currently disabled due to failing chrome tests in saucelabs
-  // api._useSSE = typeof global.EventSource === 'function';
 
   // Given a set of document/revision IDs (given by req), tets the subset of
   // those that do NOT correspond to revisions stored in the database.

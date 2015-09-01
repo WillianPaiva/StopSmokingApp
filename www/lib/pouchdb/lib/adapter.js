@@ -106,7 +106,7 @@ function allDocsKeysQuery(api, opts, callback) {
     offset: opts.skip
   };
   return Promise.all(keys.map(function (key) {
-    var subOpts = utils.extend(true, {key: key, deleted: 'ok'}, opts);
+    var subOpts = utils.extend({key: key, deleted: 'ok'}, opts);
     ['limit', 'skip', 'keys'].forEach(function (optKey) {
       delete subOpts[optKey];
     });
@@ -459,7 +459,7 @@ AbstractPouchDB.prototype._compact = function (opts, callback) {
     .on('complete', onComplete)
     .on('error', callback);
 };
-/* Begin api wrappers. Specific functionality to storage belongs in the 
+/* Begin api wrappers. Specific functionality to storage belongs in the
    _[method] */
 AbstractPouchDB.prototype.get =
   utils.adapterFun('get', function (id, opts, callback) {
@@ -650,6 +650,12 @@ AbstractPouchDB.prototype.allDocs =
   }
   opts = utils.clone(opts);
   opts.skip = typeof opts.skip !== 'undefined' ? opts.skip : 0;
+  if (opts.start_key) {
+    opts.startkey = opts.start_key;
+  }
+  if (opts.end_key) {
+    opts.endkey = opts.end_key;
+  }
   if ('keys' in opts) {
     if (!Array.isArray(opts.keys)) {
       return callback(new TypeError('options.keys must be an array'));
@@ -716,7 +722,7 @@ AbstractPouchDB.prototype.bulkDocs =
     opts = {};
   }
 
-  opts = utils.clone(opts);
+  opts = utils.clone(opts || {});
 
   if (Array.isArray(req)) {
     req = {
@@ -778,12 +784,10 @@ AbstractPouchDB.prototype.registerDependentDatabase =
     doc.dependentDbs[dependentDb] = true;
     return doc;
   }
-  upsert(this, '_local/_pouch_dependentDbs', diffFun, function (err) {
-    if (err) {
-      return callback(err);
-    }
-    return callback(null, {db: depDB});
-  });
+  upsert(this, '_local/_pouch_dependentDbs', diffFun)
+    .then(function () {
+      callback(null, {db: depDB});
+    }).catch(callback);
 });
 
 AbstractPouchDB.prototype.destroy =
@@ -802,6 +806,12 @@ AbstractPouchDB.prototype.destroy =
       callback(null, resp || { 'ok': true });
     });
   }
+
+  if (self.type() === 'http') {
+    // no need to check for dependent DBs if it's a remote DB
+    return destroyDb();
+  }
+
   self.get('_local/_pouch_dependentDbs', function (err, localDoc) {
     if (err) {
       if (err.status !== 404) {
