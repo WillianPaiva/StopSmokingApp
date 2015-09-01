@@ -232,6 +232,7 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
             })).then(function(res){
                 if(res.hasOwnProperty('docs')){
                     time.f = new Date(res.docs[0].date).getHours();
+                    
                 }
                 return $q.all(res.docs.map(function(doc){
                     time.l = new Date(doc.date).getHours();
@@ -394,11 +395,21 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
             var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
             var count = 0;
             var days = [];
-            $q.when(pouchService.db.find({
+            var d1 = new Date();
+            var d2 = new Date();
+            d1.setFullYear(data[0][1]);
+            d1.setMonth(data[0][0]);
+            d1.setTime(0,0,0,0);
+            d1.setDate(1);
+            d2.setFullYear(data[0][1]);
+            d2.setMonth((data[0][0])+1);
+            d2.setTime(0,0,0,0);
+            d2.setDate(1);
+            $q.when(pouchService.db.query({
                 selector: {
                     $and: [
-                        {year: {$eq: data[0][1]}},
-                        {month: {$eq: data[0][0]}},
+                        {date: {$gte: d1}},
+                        {date: {$lt: d2}},
                     ]
                 },
             })).then(function(res){
