@@ -64,12 +64,8 @@ app.run( function($ionicPlatform, $state, DataBase, initialRun, $localStorage){
             initialRun.setInitialRun(false);
             state = "wizard.intro";
             DataBase.byStatus();
-            DataBase.lastWeek();
-            DataBase.lastWeek2();
-            DataBase.lastWeekWithHour();
+            DataBase.byDate();
             DataBase.allData();
-            DataBase.allData2();
-            DataBase.byMonthYear();
             $localStorage.set('timeFrame', 10);
             $localStorage.set('learnTime', 3);
             $localStorage.set('price', 0.00);
