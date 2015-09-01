@@ -286,7 +286,7 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
             day1 = date.getDate();
             week1 = date.getWeek();
             year1 = date.getFullYear();
-            date.addDays(-7);
+            date.addDays(-6);
             day2 = date.getDate();
             week2 = date.getWeek();
             year2 = date.getFullYear();
@@ -295,8 +295,8 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
                     $and: [
                         {year: {$lte: year1}},
                         {year: {$gte: year2}},
-                        {day: {$lte: day1}},
-                        {day: {$gte: day2}},
+                        //TODO fix bug on month change 
+                        {day: {$exists: true}},
                         {week: {$lte: week1}},
                         {week: {$gte: week2}},
                         {hour: {$exists: true}},
@@ -306,7 +306,7 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
                 sort: ['month', 'day', 'hour']
             })).then(function(res){
                 if(res.hasOwnProperty('docs')){
-                    time.f=res.docs[0].hour;
+                    time.f = res.docs[0].hour;
                 }
                 return $q.all(res.docs.map(function(doc){
                     time.l = doc.hour   ;
@@ -486,6 +486,15 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
         allData: function(){
             pouchService.db.createIndex({
                 index: {fields: ['month', 'day', 'hour', 'year', 'week']}
+            }).then(function(result){
+                console.log(result);
+            }).catch(function(err){
+                console.log(err);
+            });
+        },
+        lastWeek2: function(){
+            pouchService.db.createIndex({
+                index: {fields: ['month', 'day', 'hour', 'week', 'year']}
             }).then(function(result){
                 console.log(result);
             }).catch(function(err){
