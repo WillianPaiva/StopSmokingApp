@@ -198,23 +198,9 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
     });
     return{
         InsertDate: function(date, status){
-            var day, month, year, week, hour, minute, weekDay;  
-            day = date.getDate();
-            month = date.getMonth();
-            year = date.getFullYear();
-            week = date.getWeek();
-            hour = date.getHours();
-            minute = date.getMinutes();
-            weekDay = date.getDay();
             return $q.when(pouchService.db.post({
                 status: status,
-                day: day,
-                month: month,
-                year: year,
-                week: week,
-                hour: hour,
-                minute: minute,
-                weekDay: weekDay,
+                date: date,
             })).then(function(resp){
                 $localStorage.setObject('lastEntrance', resp);
                 console.log(resp);
