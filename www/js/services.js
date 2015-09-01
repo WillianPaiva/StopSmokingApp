@@ -226,20 +226,17 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
             $q.when(pouchService.db.find({
                 selector: {
                     status: {$eq: key},
-                    year: {$exists: true},
-                    month: {$exists: true},
-                    day: {$exists: true},
-                    hour: {$exists: true},
+                    date: {$exists: true},
                 },
-                sort:['year', 'month' , 'day' , 'hour'],
+                sort:['date'],
             })).then(function(res){
                 if(res.hasOwnProperty('docs')){
-                    time.f = res.docs[0].hour;
+                    time.f = new Date(res.docs[0].date).getHours();
                 }
                 return $q.all(res.docs.map(function(doc){
-                    time.l = doc.hour;
-                    temp2.push(doc.day);
-                    return temp[doc.hour]++;
+                    time.l = new Date(doc.date).getHours();
+                    temp2.push(new Date(doc.date).getDay());
+                    return temp[new Date(doc.date).getHours()]++;
                 }));
             }).then(function(data){
                 temp2 = temp2.unique();
@@ -268,36 +265,24 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
             var temp = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
             var temp2 = [];
             var time = {};
-            var day1, day2, week1, week2, year1, year2;
-            day1 = date.getDate();
-            week1 = date.getWeek();
-            year1 = date.getFullYear();
-            date.addDays(-6);
-            day2 = date.getDate();
-            week2 = date.getWeek();
-            year2 = date.getFullYear();
+            var date2 = new Date(date);
+            date2.addDays(-7);
             $q.when(pouchService.db.find({
                 selector: {
                     $and: [
-                        {year: {$lte: year1}},
-                        {year: {$gte: year2}},
-                        //TODO fix bug on month change 
-                        {day: {$exists: true}},
-                        {week: {$lte: week1}},
-                        {week: {$gte: week2}},
-                        {hour: {$exists: true}},
-                        {month: {$exists: true}},
+                        {date: {$lte: date}},
+                        {date: {$gte: date2}},
                     ]
                 },
-                sort: ['month', 'day', 'hour']
+                sort: ['date']
             })).then(function(res){
                 if(res.hasOwnProperty('docs')){
-                    time.f = res.docs[0].hour;
+                    time.f = new Date(res.docs[0].date).getHours();
                 }
                 return $q.all(res.docs.map(function(doc){
-                    time.l = doc.hour   ;
-                    temp2.push(doc.day);
-                    return temp[doc.hour]++;
+                    time.l = new Date(doc.date).getHours()   ;
+                    temp2.push(new Date(doc.date).getDay());
+                    return temp[new Date(doc.date).getHours()]++;
                 }));
             }).then(function(data){
                 var bool = null;
@@ -325,22 +310,21 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
         getAllDay: function(date, callback){
             var temp = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
             var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-            var day, week, year, month;
-            day = date.getDate();
-            week = date.getWeek();
-            year = date.getFullYear();
-            month = date.getMonth();
+            var d1 = new Date(date);
+            var d2 = new Date(date);
+            d1.setHours(0,0,0,0);
+            d2.addDays(1);
+            d2.setHours(0,0,0,0);
             $q.when(pouchService.db.find({
                 selector: {
                     $and: [
-                        {year: {$eq: year}},
-                        {day: {$eq: day}},
-                        {month: {$eq: month}},
+                        {date: {$gte: d1}},
+                        {date: {$lt: d2}},
                     ]
                 },
             })).then(function(res){
                 return $q.all(res.docs.map(function(doc){
-                    return temp[doc.hour]++;
+                    return temp[new Date(doc.date).getHours()]++;
                 }));
             }).then(function(data){
                 return temp;
@@ -354,30 +338,18 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
         getMedian: function(date, callback){
             var temp2 = [];
             var count = 0;
-            var day1, day2, week1, week2, year1, year2, hour;
-            day1 = date.getDate();
-            week1 = date.getWeek();
-            year1 = date.getFullYear();
-            hour = date.getHours();
-            date.addDays(-7);
-            day2 = date.getDate();
-            week2 = date.getWeek();
-            year2 = date.getFullYear();
+            var date2 = new Date(date);
+            date2.addDays(-7);
             $q.when(pouchService.db.find({
                 selector: {
                     $and: [
-                        {year: {$lte: year1}},
-                        {year: {$gte: year2}},
-                        {day: {$lte: day1}},
-                        {day: {$gte: day2}},
-                        {week: {$lte: week1}},
-                        {week: {$gte: week2}},
-                        {hour: {$eq: hour}}
+                        {date: {$lte: date}},
+                        {year: {$gte: date2}},
                     ]
                 },
             })).then(function(res){
                 return $q.all(res.docs.map(function(doc){
-                    temp2.push(doc.day);
+                    temp2.push(new Date(doc.date).getDay());
                     return count++;
                 }));
             }).then(function(data){
@@ -396,14 +368,14 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
             var days = [];
             $q.when(pouchService.db.find({
                 selector: {
-                    year: {$exists: true},
-                    month: {$exists: true}
+                    date: {$exists: true}
                 },
-                sort: ['year','month']
+                sort: ['date']
             })).then(function(res){
                 return $q.all(res.docs.map(function(doc){
                     if(doc.day){
-                        days.push([doc.month , doc.year]);
+                        var temp = new Date(doc.date);
+                        days.push([temp.getMonth() , temp.getFullYear()]);
                         //days.push();
                     }
                     return days;
@@ -420,7 +392,6 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
         },
         getMothExpense: function(data, callback){
             var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-
             var count = 0;
             var days = [];
             $q.when(pouchService.db.find({
@@ -460,9 +431,9 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
                 console.log(err);
             });
         },
-        lastWeekWithHour: function(){
+        byDate: function(){
             pouchService.db.createIndex({
-                index: {fields: ['year', 'week', 'hour', 'day']}
+                index: {fields: ['date']}
             }).then(function(result){
                 console.log(result);
             }).catch(function(err){
@@ -471,49 +442,13 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
         },
         allData: function(){
             pouchService.db.createIndex({
-                index: {fields: ['month', 'day', 'hour', 'year', 'week']}
+                index: {fields: ['date','status']}
             }).then(function(result){
                 console.log(result);
             }).catch(function(err){
                 console.log(err);
             });
         },
-        lastWeek2: function(){
-            pouchService.db.createIndex({
-                index: {fields: ['month', 'day', 'hour', 'week', 'year']}
-            }).then(function(result){
-                console.log(result);
-            }).catch(function(err){
-                console.log(err);
-            });
-        },
-        allData2: function(){
-            pouchService.db.createIndex({
-                index: {fields: ['year', 'month', 'day', 'hour', 'status']}
-            }).then(function(result){
-                console.log(result);
-            }).catch(function(err){
-                console.log(err);
-            });
-        },
-        byMonthYear: function(){
-            pouchService.db.createIndex({
-                index: {fields: ['year', 'month']}
-            }).then(function(result){
-                console.log(result);
-            }).catch(function(err){
-                console.log(err);
-            });
-        },
-        lastWeek: function(){
-            pouchService.db.createIndex({
-                index: {fields: ['year', 'week', 'day', 'status']}
-            }).then(function(result){
-                console.log(result);
-            }).catch(function(err){
-                console.log(err);
-            });
-        }
 
     };
 });
