@@ -36,8 +36,6 @@ appServ.factory('buttonTimeOut', function(cigTime,$localStorage, $timeout, $root
                 showCravingPopup = false;
                 button.tex = 'Ready' ;
                 button.class = "col button button-raised button-balanced";
-
-
             }
         }else{
             showCravingPopup = false;
@@ -48,13 +46,8 @@ appServ.factory('buttonTimeOut', function(cigTime,$localStorage, $timeout, $root
         $timeout(tick, tickInterval);
     };
     $timeout(tick, tickInterval);
-
     return true;
 });
-
-
-
-
 
 appServ.factory('$localStorage', ['$window', function($window){
     return {
@@ -76,7 +69,6 @@ appServ.factory('$localStorage', ['$window', function($window){
         destroy: function(){
             $window.localStorage.clear();
         }
-
     };
 }]);
 
@@ -109,12 +101,8 @@ appServ.factory('chartData',function(DataBase, chart, $rootScope){
             DataBase.setChartLastWeek(new Date(), setMedian);
             DataBase.setChart('Learn', setBaseLine);
         },
-
-
     };
-
 });
-
 
 appServ.factory('chart', function(){
     return{
@@ -170,7 +158,6 @@ appServ.factory('chart', function(){
                 }]
             ];
             return ResponsiveOptions;        
-
         },
         data: function(meta,data,callback){
             var d = [];
@@ -180,13 +167,11 @@ appServ.factory('chart', function(){
             return callback(d);
         }
     };
-
 });
 
 function PouchService(){
     this.db = new PouchDB('AppDatabase',{adapter: 'websql'});
 }
-
 
 appServ.service('pouchService', PouchService);
 
@@ -232,7 +217,6 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
             })).then(function(res){
                 if(res.hasOwnProperty('docs')){
                     time.f = new Date(res.docs[0].date).getHours();
-                    
                 }
                 return $q.all(res.docs.map(function(doc){
                     time.l = new Date(doc.date).getHours();
@@ -242,7 +226,6 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
             }).then(function(data){
                 temp2 = temp2.unique();
                 var bool = null;
-
                 for(var i = 0; i < 24; i++){
                     if((i >= time.l) && (i >= time.f)){
                         if(temp2.length > 0){
@@ -253,7 +236,6 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
                             temp[i] = (temp[i]/(temp2.length -1));
                         }
                     }
-
                 }
                 return temp;
             }).then(function(data){
@@ -299,7 +281,6 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
                             temp[i] = (temp[i]/(temp2.length -1));
                         }
                     }
-
                 }
                 return temp;
             }).then(function(data){
@@ -381,7 +362,6 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
                     }
                     return days;
                 }));
-
             }).then(function(data){
                 days = days.unique();
             }).then(function(data){
@@ -389,7 +369,6 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
             }).catch(function(err){
                 console.log(err);
             });
-
         },
         getMothExpense: function(data, callback){
             var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -432,7 +411,6 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
                 console.log(err);
             });
         },
-
         byStatus: function(){
             pouchService.db.createIndex({
                 index: {fields: ['status']}
@@ -460,11 +438,8 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
                 console.log(err);
             });
         },
-
     };
 });
-
-
 
 appServ.factory('initialRun', function ($localStorage) {
     return {
@@ -491,14 +466,8 @@ appServ.factory('cigTime', function($localStorage, DataBase){
             console.log(data);
             var timeToAdd = 60/data + (parseInt($localStorage.get('timeFrame'))) + (plus * 60) ;
             $localStorage.set('nextCig', new Date($localStorage.get('lastCig')).addMinutes(timeToAdd));
-
         }
-
-
-
     };
-
-
     return{
         isLearnFinished: function(time){
             var test = new Date($localStorage.get('firstCig')).isLearnFinished(time) === true;
@@ -513,7 +482,6 @@ appServ.factory('cigTime', function($localStorage, DataBase){
         getNextCig: function(){
             return new Date($localStorage.get('nextCig'));
         },
-
         setNextCig: function(date){
             plus = 0;
             dat = new Date(date);
