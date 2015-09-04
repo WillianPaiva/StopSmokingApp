@@ -1,8 +1,14 @@
 <ion-view view-title="Comsumption">
-    <ion-content class="padding">
-        <canvas id="line" class="chart chart-line" data="data" labels="labels" 
-            legend="true" series="series" ></canvas>
-
+    <ion-content class="animate-fade-slide-in">
+        <div 
+            chartist-events="event" 
+            chartist class="hero item ct-chart" 
+            chartist-data="lineData" 
+            chartist-chart-type="Line" 
+            chartist-chart-options="lineOptions" 
+            chartist-responsive-options="ResponsiveOptions"
+            >
+        </div>
         <span class="input-label">
             Price
         </span>

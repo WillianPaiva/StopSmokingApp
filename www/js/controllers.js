@@ -191,7 +191,7 @@ appCtrl.controller(
 
         }]);
 
-        appCtrl.controller('EcoCtrl', ['$localStorage', '$scope', 'DataBase', function($localStorage, $scope, DataBase){
+        appCtrl.controller('EcoCtrl', ['ionicMaterialInk', 'ionicMaterialMotion','$timeout','$localStorage', '$scope', 'DataBase', function(ionicMaterialInk, ionicMaterialMotion, $timeout, $localStorage, $scope, DataBase){
             $scope.price = parseFloat($localStorage.get('price')) ;
             $scope.submitPrice = function(data){
                 $localStorage.set('price', data);
@@ -229,6 +229,13 @@ appCtrl.controller(
             //$scope.$on("$ionicView.afterLeave", function () {
             //$ionicHistory.clearCache();
             //}); 
+
+                $timeout(function() {
+                    ionicMaterialMotion.fadeSlideIn({
+                    });
+                }, 200);
+
+                ionicMaterialInk.displayEffect();
         }]);
 
 
