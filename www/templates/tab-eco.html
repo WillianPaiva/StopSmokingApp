@@ -9,10 +9,7 @@
             chartist-responsive-options="ResponsiveOptions"
             >
         </div>
-        <span class="input-label">
-            Price
-        </span>
-        <div class="item item-input-inset">
+        <div class="item  test item-input-inset">
             <label class="item-input-wrapper">
             <i class="icon ion-social-usd "></i>
                 <input type="number" placeholder="Price" ng-model="price">
@@ -20,6 +17,16 @@
             <button class="button button-small button-balanced" ng-click="submitPrice(price)">
                 Submit
             </button>
+        </div>
+        Breack Donwns
+        <div 
+            chartist-events="event" 
+            chartist class="hero item ct-chart" 
+            chartist-data="lineData" 
+            chartist-chart-type="Line" 
+            chartist-chart-options="lineOptions" 
+            chartist-responsive-options="ResponsiveOptions"
+            >
         </div>
 
     </ion-content>
