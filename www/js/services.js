@@ -79,11 +79,12 @@ appServ.factory('chartData',function(DataBase, chart, $rootScope){
     var count = 0;
     function setMedian(data){
         chart.data('Last Week', data,pushData);
+        DataBase.setChart('Learn', setBaseLine);
     }
     function setBaseLine(data){
         chart.data('Base Line', data,pushData);
     }
-    function countAndSend(){
+function countAndSend(){
         if(count > 1){
             $rootScope.$broadcast('$mainChartData.loaded',mainChartData);
         }
@@ -99,7 +100,6 @@ appServ.factory('chartData',function(DataBase, chart, $rootScope){
                 series:[],
             };
             DataBase.setChartLastWeek(new Date(), setMedian);
-            DataBase.setChart('Learn', setBaseLine);
         },
     };
 });
