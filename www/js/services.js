@@ -304,6 +304,7 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
                         {date: {$lt: d2}},
                     ]
                 },
+                sort: ['date'],
             })).then(function(res){
                 return $q.all(res.docs.map(function(doc){
                     return temp[new Date(doc.date).getHours()]++;
@@ -326,7 +327,7 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
                 selector: {
                     $and: [
                         {date: {$lte: date}},
-                        {year: {$gte: date2}},
+                        {date: {$gte: date2}},
                     ]
                 },
             })).then(function(res){
