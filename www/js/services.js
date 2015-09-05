@@ -332,8 +332,12 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
                 },
             })).then(function(res){
                 return $q.all(res.docs.map(function(doc){
-                    temp2.push(new Date(doc.date).getDay());
-                    return count++;
+                    if(new Date(doc.date).getHours()===date.getHours() && doc._id != $localStorage.getObject('lastEntrance').id){
+                        console.log("value");
+                        temp2.push(new Date(doc.date).getDay());
+                        count++;
+                    }
+                    return count;
                 }));
             }).then(function(data){
                 temp2 = temp2.unique();
