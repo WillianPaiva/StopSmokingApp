@@ -164,7 +164,41 @@ var dashArgs =
 
 appCtrl.controller( 'DashCtrl', dashArgs);
 
-function ecoController(ionicMaterialInk, ionicMaterialMotion, $timeout, $localStorage, $scope, DataBase){
+function ecoController(ionicMaterialInk, ionicMaterialMotion, $timeout, $localStorage, $scope, DataBase, chart){
+    /************************
+     *  line chart config   *
+     ************************/
+    
+    $scope.type = 'line';
+    $scope.x = 0;
+    $scope.lineData = { 
+        series: []
+    };
+    $scope.axis = [];
+    $scope.heightMainChart = $scope.lineData.series.length ;
+    $scope.lineOptions = chart.optionsLineWithAxisX($scope.heightMainChart,$scope.axis); 
+    $scope.ResponsiveOptions = chart.ResponsiveOptions(); 
+    $scope.event = {
+        draw: function eventHandler(data) {
+            if(data.type === 'line' || data.type === 'area') {
+                data.element.animate({
+                    d: {
+                        begin: 500 * data.index,
+                        dur: 1000,
+                        from: data.path.clone().scale(1, 0).translate(0, data.chartRect.height()).stringify(),
+                        to: data.path.clone().stringify(),
+                        easing: Chartist.Svg.Easing.easeOutQuint
+                    }
+                });
+            }
+        }
+    };
+
+
+    /***************
+     *  set Price  *
+     ***************/
+    
     $scope.price = parseFloat($localStorage.get('price')) ;
     $scope.submitPrice = function(data){
         $localStorage.set('price', data);
@@ -172,26 +206,32 @@ function ecoController(ionicMaterialInk, ionicMaterialMotion, $timeout, $localSt
     };
 
 
-    $scope.serie = [0];
-    $scope.data = [$scope.serie];
-    $scope.labels = [];
-    $scope.series = ['Expenses'];
-    $scope.dat = [[]];
 
     function getdata(data) {
-        $scope.serie = [];
-        $scope.labels = [];
+        $scope.axis = [];
+        $scope.x = 0;
+        $scope.data = [];
+        $scope.lineData = { 
+            series: []
+        };
         startup(data);
     }
     function startup(data){
         if(data.length > 0){
             DataBase.getMothExpense(data,insertSerie);
+        }else{
+        $scope.lineData.series.push($scope.data);
+        console.log($scope.lineData.series);
+        $scope.heightMainChart = $scope.lineData.series.length ;
+        $scope.lineOptions = chart.optionsLineWithAxisX($scope.heightMainChart,$scope.axis); 
+        
         }
 
     }
     function insertSerie(label,value,data){
-        $scope.labels.push(label);
-        $scope.serie.push(value);
+        $scope.axis.push(label);
+        $scope.data.push({name:'Expenses',x:$scope.x,y:value});
+        $scope.x++;
         startup(data);
     }
     $scope.$watch('serie', function(){
@@ -219,6 +259,7 @@ var ecoArgs =
     '$localStorage',
     '$scope',
     'DataBase',
+    'chart',
     ecoController
 ];
 
