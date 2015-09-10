@@ -44,7 +44,7 @@ function dashcontoler($ionicPlatform, $ionicPopup, $localStorage, $scope, $timeo
         $scope.showCravingPopup = false;
         $scope.$on('$button.refreshed', function(event, data){
             $scope.button = data.button;
-            $scope.cravingPopup = data.cravingPopup;
+            $scope.showCravingPopup = data.cravingPopup;
         });
         /*****************
         *  undo button  *
