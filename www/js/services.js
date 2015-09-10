@@ -146,6 +146,46 @@ appServ.factory('chart', function(){
             };
             return options;
         },
+        optionsLineWithAxisX: function(multiplier, axis){
+            if(Math.abs(multiplier)% 2 == 1){
+                multiplier++;
+            }
+            var height = 150 + ((multiplier/2) * 15);
+            var offset = height - 130;
+            var options = {
+                height: height+'px',
+                axisX: {
+                    type: Chartist.FixedScaleAxis,
+                    ticks: axis,
+                    //stretch: true,
+                    high: 23,
+                    low: 0,
+                    onlyInteger: true,
+                    offset: offset,
+                },
+                axisY: {
+                    scaleMinSpace: 15,
+                    offset: 30,
+                },
+                chartPadding: {
+                    top: 15,
+                    right: 0,
+                    bottom: 0,
+                    left: 0
+                },
+                low: 0,
+                showArea: true,
+                showPoint: true,
+                fullWidth: true,
+                plugins:[
+                    legendPlugin({t: 'midle'})
+                ],
+                lineSmooth: Chartist.Interpolation.cardinal({
+                    tension: 0.3
+                })
+            };
+            return options;
+        },
         ResponsiveOptions: function(){
             var ResponsiveOptions = [
                 ['screen and (min-width: 641px) and (max-width: 1024px)', {
@@ -360,11 +400,9 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
                 sort: ['date']
             })).then(function(res){
                 return $q.all(res.docs.map(function(doc){
-                    if(doc.day){
                         var temp = new Date(doc.date);
                         days.push([temp.getMonth() , temp.getFullYear()]);
                         //days.push();
-                    }
                     return days;
                 }));
             }).then(function(data){
@@ -379,26 +417,19 @@ appServ.factory('DataBase', function(pouchService, $q, $localStorage){
             var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
             var count = 0;
             var days = [];
-            var d1 = new Date();
-            var d2 = new Date();
-            d1.setFullYear(data[0][1]);
-            d1.setMonth(data[0][0]);
-            d1.setTime(0,0,0,0);
-            d1.setDate(1);
-            d2.setFullYear(data[0][1]);
-            d2.setMonth((data[0][0])+1);
-            d2.setTime(0,0,0,0);
-            d2.setDate(1);
-            $q.when(pouchService.db.query({
+            var d1 = new Date(data[0][1],data[0][0],1,0,0,0,0);
+            var d2 = new Date(data[0][1],(data[0][0]+1),1,0,0,0,0);
+            $q.when(pouchService.db.find({
                 selector: {
                     $and: [
                         {date: {$gte: d1}},
                         {date: {$lt: d2}},
                     ]
                 },
+                sort: ['date']
             })).then(function(res){
                 return $q.all(res.docs.map(function(doc){
-                    days.push(doc.day);
+                    days.push(new Date(doc.date).getDate());
                     return count++;
                 }));
             }).then(function(res){
